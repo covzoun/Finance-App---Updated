@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Digital Wallet",
+  "description": "A modern, clean, and minimalist digital wallet app to track net worth, manage custom wallets, and track savings and spending.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
