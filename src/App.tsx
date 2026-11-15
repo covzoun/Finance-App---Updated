@@ -27,14 +27,13 @@ export default function App() {
   const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'wallets' | 'activity' | 'debts'>('wallets');
   
-  // Theme Toggle: Support 'light' and 'dark'
   const [lastBackupDate, setLastBackupDate] = useState<string | null>(() => {
-        return localStorage.getItem('dw_last_backup') || null;
-      });
+    return localStorage.getItem('dw_last_backup') || null;
+  });
 
-      const [themeMode, setThemeMode] = useState<'light' | 'dark'>(() => {
-        return (localStorage.getItem('dw_theme') as 'light' | 'dark') || 'light';
-      });
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('dw_theme') as 'light' | 'dark') || 'light';
+  });
 
   // Modals / Overlays
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
@@ -42,10 +41,8 @@ export default function App() {
   const [isAddDebtOpen, setIsAddDebtOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);
-  const [showNoAccountTxWarning, setShowNoAccountTxWarning] = useState(false);
   const [visibleTxCount, setVisibleTxCount] = useState(50);
   
-  // Privacy balance mask state
   const [hideBalances, setHideBalances] = useState<boolean>(() => {
     return localStorage.getItem('dw_hide_balances') === 'true';
   });
@@ -58,16 +55,11 @@ export default function App() {
     });
   };
 
-  // Activity search and filters
   const [txSearchQuery, setTxSearchQuery] = useState('');
   const [txTypeFilter, setTxTypeFilter] = useState<'all' | 'expense' | 'income' | 'transfer' | 'recurring'>('all');
 
-  
-  // Quick preselection for transaction form
   const [preselectedWalletId, setPreselectedWalletId] = useState<string | undefined>(undefined);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-
-  // Simulated live clock
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -81,9 +73,7 @@ export default function App() {
     };
   }, [isAddWalletOpen, isAddTxOpen, isAddDebtOpen, isSettingsOpen, selectedWalletId]);
 
-  // --- PERSISTENCE & INITIALIZATION ---
   useEffect(() => {
-    // Load wallets
     const savedWallets = localStorage.getItem('dw_wallets');
     if (savedWallets) {
       try {
@@ -101,7 +91,6 @@ export default function App() {
       localStorage.setItem('dw_wallets', JSON.stringify([]));
     }
 
-    // Load transactions
     const savedTxs = localStorage.getItem('dw_transactions');
     if (savedTxs) {
       try {
@@ -114,7 +103,6 @@ export default function App() {
       localStorage.setItem('dw_transactions', JSON.stringify([]));
     }
 
-    // Load debts
     const savedDebts = localStorage.getItem('dw_debts');
     if (savedDebts) {
       try {
@@ -127,12 +115,10 @@ export default function App() {
       localStorage.setItem('dw_debts', JSON.stringify([]));
     }
 
-    // Start clock
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Save to local storage whenever states change
   const saveWallets = (updatedWallets: Wallet[]) => {
     setWallets(updatedWallets);
     localStorage.setItem('dw_wallets', JSON.stringify(updatedWallets));
@@ -148,14 +134,12 @@ export default function App() {
     localStorage.setItem('dw_debts', JSON.stringify(updatedDebts));
   };
 
-  // --- THEME TOGGLE WORKFLOW ---
   const toggleTheme = () => {
     const next = themeMode === 'light' ? 'dark' : 'light';
     setThemeMode(next);
     localStorage.setItem('dw_theme', next);
   };
 
-  // --- RESET APP WORKFLOW ---
   const handleResetApp = () => {
     saveWallets([]);
     saveTransactions([]);
@@ -164,10 +148,8 @@ export default function App() {
     setActiveTab('wallets');
   };
 
-  // --- FINANCIAL CALCULATIONS ---
   const totalNetWorth = calcNetWorth(wallets);
 
-  // Monthly income vs spending trends (converted to PHP for consistent tracking)
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
   
@@ -190,59 +172,38 @@ export default function App() {
     })
     .reduce((sum, t) => sum + getTxPHPValue(t), 0);
 
-  // --- ACTIONS ---
-
-  // 1. Add Wallet
   const handleAddWallet = (newWallet: Wallet) => {
-    const updated = [newWallet, ...wallets];
-    saveWallets(updated);
+    saveWallets([newWallet, ...wallets]);
   };
 
-  // 2. Add Transaction
   const handleAddTransaction = (newTxData: Omit<Transaction, 'id'>) => {
     const newTx: Transaction = {
       ...newTxData,
       id: `t-${Date.now()}`,
     };
-
     const updatedWallets = applyTransactionBalances(newTx, wallets);
     saveWallets(updatedWallets);
     saveTransactions([newTx, ...transactions]);
   };
 
-  // 3. Edit Transaction
   const handleEditTransaction = (txId: string, updatedTxData: Omit<Transaction, 'id'>) => {
     const oldTx = transactions.find((t) => t.id === txId);
     if (!oldTx) return;
-
-    // First revert old transaction balances
     let updatedWallets = revertTransactionBalances(oldTx, wallets);
-
-    const updatedTx: Transaction = {
-      ...updatedTxData,
-      id: txId,
-    };
-
-    // Then apply new transaction balances
+    const updatedTx: Transaction = { ...updatedTxData, id: txId };
     updatedWallets = applyTransactionBalances(updatedTx, updatedWallets);
-
     saveWallets(updatedWallets);
-    saveTransactions(transactions.map((t) => t.id === txId ? updatedTx : t));
+    saveTransactions(transactions.map((t) => (t.id === txId ? updatedTx : t)));
   };
 
-  // 4. Delete Transaction
   const handleDeleteTransaction = (txId: string) => {
     const oldTx = transactions.find((t) => t.id === txId);
     if (!oldTx) return;
-
-    // Revert balance impact
     const updatedWallets = revertTransactionBalances(oldTx, wallets);
-
     saveWallets(updatedWallets);
     saveTransactions(transactions.filter((t) => t.id !== txId));
   };
 
-  // 5. Edit Wallet Details (Supports name, description, color accent, icon, currency, type, optional initial balance, and image)
   const handleEditWallet = (
     walletId: string,
     updatedName: string,
@@ -291,14 +252,11 @@ export default function App() {
     saveWallets(updated);
   };
 
-  // 6. Delete Wallet
   const handleDeleteWallet = (walletId: string) => {
-    const updated = wallets.filter((w) => w.id !== walletId);
-    saveWallets(updated);
+    saveWallets(wallets.filter((w) => w.id !== walletId));
     setSelectedWalletId(null);
   };
 
-  // --- DEBTS & CREDITS WORKFLOWS ---
   const handleAddDebt = (
     newDebtData: Omit<Debt, 'id' | 'status' | 'remainingAmount'> & { date?: string },
     shouldAffectWallet: boolean
@@ -321,35 +279,31 @@ export default function App() {
       if (wallet) {
         const isLent = newDebtData.type === 'lent';
         const txAmount = newDebtData.amount;
-        
         nextWallets = wallets.map((w) => {
           if (w.id === newDebtData.walletId) {
-            const nextBalance = isLent 
+            const nextBalance = isLent
               ? Number((w.balance - txAmount).toFixed(2))
               : Number((w.balance + txAmount).toFixed(2));
             return { ...w, balance: nextBalance };
           }
           return w;
         });
-
         const ledgerTx: Transaction = {
           id: `t-debt-${Date.now()}`,
           walletId: newDebtData.walletId,
           type: isLent ? 'expense' : 'income',
           amount: txAmount,
           category: isLent ? 'Lent' : 'Borrowed',
-          description: isLent 
+          description: isLent
             ? `Lent money to ${newDebtData.person}${newDebtData.description ? ` (${newDebtData.description})` : ''}`
             : `Borrowed money from ${newDebtData.person}${newDebtData.description ? ` (${newDebtData.description})` : ''}`,
           date: debtDate,
         };
-
         nextTransactions = [ledgerTx, ...nextTransactions];
         saveTransactions(nextTransactions);
         saveWallets(nextWallets);
       }
     }
-
     saveDebts([newDebt, ...debts]);
   };
 
@@ -361,11 +315,9 @@ export default function App() {
   ) => {
     const debt = debts.find((d) => d.id === debtId);
     if (!debt) return;
-
     const isLent = debt.type === 'lent';
     const nextRemaining = Number((debt.remainingAmount - amount).toFixed(2));
     const nextStatus = nextRemaining <= 0 ? 'paid' : 'partially_paid';
-
     let nextTransactions = [...transactions];
     let nextWallets = [...wallets];
 
@@ -374,66 +326,51 @@ export default function App() {
       if (wallet) {
         nextWallets = wallets.map((w) => {
           if (w.id === walletId) {
-            const nextBalance = isLent 
+            const nextBalance = isLent
               ? Number((w.balance + amount).toFixed(2))
               : Number((w.balance - amount).toFixed(2));
             return { ...w, balance: nextBalance };
           }
           return w;
         });
-
         const ledgerTx: Transaction = {
           id: `t-repay-${Date.now()}`,
           walletId,
           type: isLent ? 'income' : 'expense',
-          amount: amount,
+          amount,
           category: isLent ? 'Repayment' : 'Debt Payment',
-          description: isLent 
+          description: isLent
             ? `Received repayment from ${debt.person}`
             : `Paid back ${debt.person}`,
           date: new Date().toISOString(),
         };
-
         nextTransactions = [ledgerTx, ...nextTransactions];
         saveTransactions(nextTransactions);
         saveWallets(nextWallets);
       }
     }
 
-    const updatedDebts = debts.map((d) => {
-      if (d.id === debtId) {
-        return {
-          ...d,
-          remainingAmount: nextRemaining,
-          status: nextStatus,
-        };
-      }
-      return d;
-    });
-
-    saveDebts(updatedDebts);
+    saveDebts(
+      debts.map((d) =>
+        d.id === debtId
+          ? { ...d, remainingAmount: nextRemaining, status: nextStatus }
+          : d
+      )
+    );
   };
 
   const handleSettleDirectly = (debtId: string) => {
-    const updatedDebts = debts.map((d) => {
-      if (d.id === debtId) {
-        return {
-          ...d,
-          remainingAmount: 0,
-          status: 'paid' as const,
-        };
-      }
-      return d;
-    });
-    saveDebts(updatedDebts);
+    saveDebts(
+      debts.map((d) =>
+        d.id === debtId ? { ...d, remainingAmount: 0, status: 'paid' as const } : d
+      )
+    );
   };
 
   const handleDeleteDebt = (debtId: string) => {
-    const updatedDebts = debts.filter((d) => d.id !== debtId);
-    saveDebts(updatedDebts);
+    saveDebts(debts.filter((d) => d.id !== debtId));
   };
 
-  // --- OPEN MODAL SHORTCUTS ---
   const handleOpenTxModal = (walletId?: string) => {
     setPreselectedWalletId(walletId);
     setEditingTransaction(null);
@@ -445,7 +382,6 @@ export default function App() {
     setIsAddTxOpen(true);
   };
 
-  // --- UTILS ---
   const formatPHP = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -488,8 +424,6 @@ export default function App() {
   return (
     <div className={isDark ? 'dark' : ''}>
       <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-neutral-950 text-white' : 'bg-neutral-50 text-neutral-900'}`}>
-        {/* Full UI was present - restoring simplified structure that uses all handlers.
-            Components (WalletCard, TransactionItem, modals, etc.) remain fully functional. */}
         <header className={`sticky top-0 z-40 border-b backdrop-blur-md ${isDark ? 'bg-neutral-950/80 border-neutral-800' : 'bg-white/80 border-neutral-200'}`}>
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -514,7 +448,6 @@ export default function App() {
         </header>
 
         <main className="max-w-5xl mx-auto px-4 py-6 pb-28">
-          {/* Net worth */}
           <section className="mb-6">
             <p className={`text-xs font-medium uppercase tracking-wider mb-1 ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>Net Worth</p>
             <p className="text-3xl font-bold tracking-tight">{hideBalances ? '••••••' : formatPHP(totalNetWorth)}</p>
@@ -524,7 +457,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* Tabs */}
           <div className={`flex gap-1 p-1 rounded-xl mb-5 ${isDark ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
             {(['wallets', 'activity', 'debts'] as const).map((tab) => (
               <button
@@ -541,7 +473,6 @@ export default function App() {
             ))}
           </div>
 
-          {/* Wallets tab */}
           {activeTab === 'wallets' && (
             <div className="space-y-3">
               {wallets.length === 0 ? (
@@ -554,7 +485,7 @@ export default function App() {
                   <WalletCard
                     key={w.id}
                     wallet={w}
-                    hideBalance={hideBalances}
+                    hideBalances={hideBalances}
                     onClick={() => setSelectedWalletId(w.id)}
                     themeMode={themeMode}
                   />
@@ -563,7 +494,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Activity tab */}
           {activeTab === 'activity' && (
             <div className="space-y-2">
               <div className="flex gap-2 mb-3">
@@ -578,8 +508,7 @@ export default function App() {
                 <TransactionItem
                   key={t.id}
                   transaction={t}
-                  wallet={wallets.find((w) => w.id === t.walletId)}
-                  hideAmount={hideBalances}
+                  wallets={wallets}
                   onClick={() => handleOpenEditTxModal(t)}
                   themeMode={themeMode}
                 />
@@ -590,21 +519,19 @@ export default function App() {
             </div>
           )}
 
-          {/* Debts tab */}
           {activeTab === 'debts' && (
             <CreditsList
               debts={debts}
               wallets={wallets}
               onAddRepayment={handleAddRepayment}
               onSettleDirectly={handleSettleDirectly}
-              onDelete={handleDeleteDebt}
-              hideAmounts={hideBalances}
+              onDeleteDebt={handleDeleteDebt}
+              onOpenAddDebt={() => setIsAddDebtOpen(true)}
               themeMode={themeMode}
             />
           )}
         </main>
 
-        {/* FAB */}
         <div className="fixed bottom-6 right-6 flex flex-col gap-2 z-30">
           {activeTab === 'wallets' && (
             <button onClick={() => setIsAddWalletOpen(true)} className="w-14 h-14 rounded-full bg-emerald-600 text-white shadow-lg flex items-center justify-center">
@@ -623,7 +550,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Modals */}
         <AddWalletModal isOpen={isAddWalletOpen} onClose={() => setIsAddWalletOpen(false)} onAdd={handleAddWallet} themeMode={themeMode} />
         <AddTransactionModal
           isOpen={isAddTxOpen}
@@ -649,7 +575,6 @@ export default function App() {
           onToggleHideBalances={toggleHideBalances}
         />
 
-        {/* Analytics panel */}
         <AnimatePresence>
           {showAnalyticsPanel && (
             <motion.div
@@ -658,8 +583,8 @@ export default function App() {
               exit={{ opacity: 0, y: 40 }}
               className={`fixed inset-0 z-50 flex flex-col ${isDark ? 'bg-neutral-950' : 'bg-white'}`}
             >
-              <div className="flex items-center gap-3 p-4 border-b border-neutral-200 dark:border-neutral-800">
-                <button onClick={() => setShowAnalyticsPanel(false)} className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <div className={`flex items-center gap-3 p-4 border-b ${isDark ? 'border-neutral-800' : 'border-neutral-200'}`}>
+                <button onClick={() => setShowAnalyticsPanel(false)} className={`p-2 rounded-lg ${isDark ? 'hover:bg-neutral-800' : 'hover:bg-neutral-100'}`}>
                   <DynamicIcon name="X" size={20} />
                 </button>
                 <h2 className="font-semibold">Insights</h2>
@@ -671,16 +596,15 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Wallet details drawer */}
         {selectedWallet && (
           <WalletDetails
             wallet={selectedWallet}
             transactions={transactions.filter((t) => t.walletId === selectedWallet.id || t.toWalletId === selectedWallet.id)}
-            onClose={() => setSelectedWalletId(null)}
-            onEdit={handleEditWallet}
-            onDelete={handleDeleteWallet}
-            onAddTransaction={() => handleOpenTxModal(selectedWallet.id)}
-            hideBalances={hideBalances}
+            wallets={wallets}
+            onBack={() => setSelectedWalletId(null)}
+            onEditWallet={handleEditWallet}
+            onDeleteWallet={handleDeleteWallet}
+            onAddTransactionClick={(id) => handleOpenTxModal(id)}
             themeMode={themeMode}
           />
         )}
