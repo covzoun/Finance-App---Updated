@@ -11,45 +11,12 @@ interface WalletCardProps {
   hideBalances?: boolean;
 }
 
-const getColorTheme = (colorClass: string, isDark: boolean) => {
-  const c = colorClass.toLowerCase();
-  if (c.includes('blue')) {
-    return {
-      bg: isDark ? 'bg-blue-950/40 border border-blue-900/30' : 'bg-blue-50',
-      text: isDark ? 'text-blue-400 font-bold' : 'text-blue-600',
-    };
-  }
-  if (c.includes('indigo') || c.includes('purple')) {
-    return {
-      bg: isDark ? 'bg-indigo-950/40 border border-indigo-900/30' : 'bg-indigo-50',
-      text: isDark ? 'text-indigo-400 font-bold' : 'text-indigo-600',
-    };
-  }
-  if (c.includes('emerald') || c.includes('teal')) {
-    return {
-      bg: isDark ? 'bg-emerald-950/40 border border-emerald-900/30' : 'bg-emerald-50',
-      text: isDark ? 'text-emerald-400 font-bold' : 'text-emerald-600',
-    };
-  }
-  if (c.includes('orange') || c.includes('amber')) {
-    return {
-      bg: isDark ? 'bg-amber-950/40 border border-amber-900/30' : 'bg-orange-50',
-      text: isDark ? 'text-amber-400 font-bold' : 'text-orange-600',
-    };
-  }
-  if (c.includes('rose') || c.includes('pink') || c.includes('red')) {
-    return {
-      bg: isDark ? 'bg-rose-950/40 border border-rose-900/30' : 'bg-rose-50',
-      text: isDark ? 'text-rose-400 font-bold' : 'text-rose-600',
-    };
-  }
-  return {
-    bg: isDark ? 'bg-neutral-800' : 'bg-neutral-100',
-    text: isDark ? 'text-neutral-300' : 'text-neutral-600',
-  };
-};
-
-export default function WalletCard({ wallet, onClick, themeMode = 'light', hideBalances = false }: WalletCardProps) {
+export default function WalletCard({
+  wallet,
+  onClick,
+  themeMode = 'light',
+  hideBalances = false,
+}: WalletCardProps) {
   const isDark = themeMode === 'dark';
 
   const formatCurrency = (value: number, currency?: 'PHP' | 'USD') => {
@@ -63,64 +30,73 @@ export default function WalletCard({ wallet, onClick, themeMode = 'light', hideB
     }).format(value);
   };
 
-  const themeColors = getColorTheme(wallet.color, isDark);
+  const bankId = wallet.icon?.startsWith('bank:')
+    ? wallet.icon.replace('bank:', '')
+    : null;
+  const bankColor = bankId
+    ? BANK_PRESETS.find((p) => p.id === bankId)?.color
+    : undefined;
 
   return (
-    <motion.div
-      whileHover={{ y: -1, scale: 1.005 }}
-      whileTap={{ scale: 0.995 }}
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.99 }}
       onClick={onClick}
-      className={`relative w-full overflow-hidden rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer border shadow-xs ${
-        isDark 
-          ? 'bg-neutral-950 border-neutral-900/80 text-white hover:bg-neutral-850' 
-          : 'bg-white border-neutral-100 text-neutral-800 hover:bg-neutral-50/40'
+      className={`w-full text-left rounded-2xl px-4 py-3.5 flex items-center gap-3.5 border transition-colors ${
+        isDark
+          ? 'bg-zinc-950 border-zinc-800/80 hover:border-zinc-700'
+          : 'bg-white border-zinc-200/80 hover:border-zinc-300'
       }`}
-      id={`wallet-card-${wallet.id}`}
     >
-      {/* Left items: Icon or Image, name and type */}
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-          {wallet.image ? (
-            <img
-              src={wallet.image}
-              alt={wallet.name}
-              className="h-full w-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-          ) : wallet.icon?.startsWith('bank:') ? (
-            <div 
-              className="flex h-full w-full items-center justify-center" 
-              style={{ backgroundColor: BANK_PRESETS.find(p => p.id === wallet.icon.replace('bank:', ''))?.color || '#000' }}
-            >
-              <BankLogo bank={wallet.icon.replace('bank:', '')} size={24} />
-            </div>
-          ) : (
-            <div className={`flex h-full w-full items-center justify-center ${themeColors.bg}`}>
-              <DynamicIcon name={wallet.icon} className={themeColors.text} size={20} />
-            </div>
-          )}
-        </div>
-        <div className="min-w-0">
-          <h3 className={`font-sans font-bold tracking-tight text-sm truncate ${isDark ? 'text-neutral-100' : 'text-neutral-800'}`}>
-            {wallet.name}
-          </h3>
-          <p className={`font-sans text-[10px] font-bold uppercase tracking-widest mt-1 ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>
-            {wallet.type.replace('_', ' ')}
-          </p>
-        </div>
-      </div>
-
-      {/* Right items: formatted balance and optional description */}
-      <div className="text-right shrink-0">
-        <p className={`font-sans text-base font-extrabold tracking-tight ${isDark ? 'text-neutral-50' : 'text-neutral-900'}`}>
-          {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
-        </p>
-        {wallet.description && (
-          <p className={`font-sans text-[11px] mt-1 line-clamp-1 max-w-[120px] ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
-            {wallet.description}
-          </p>
+      <div
+        className={`h-11 w-11 shrink-0 rounded-xl overflow-hidden flex items-center justify-center ${
+          isDark ? 'bg-zinc-900' : 'bg-zinc-100'
+        }`}
+        style={bankColor ? { backgroundColor: bankColor } : undefined}
+      >
+        {wallet.image ? (
+          <img
+            src={wallet.image}
+            alt=""
+            className="h-full w-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        ) : bankId ? (
+          <BankLogo bank={bankId} size={22} />
+        ) : (
+          <DynamicIcon
+            name={wallet.icon || 'Wallet'}
+            size={18}
+            className={isDark ? 'text-zinc-400' : 'text-zinc-500'}
+          />
         )}
       </div>
-    </motion.div>
+
+      <div className="min-w-0 flex-1">
+        <p
+          className={`text-[13px] font-medium tracking-tight truncate ${
+            isDark ? 'text-zinc-100' : 'text-zinc-900'
+          }`}
+        >
+          {wallet.name}
+        </p>
+        <p
+          className={`text-[11px] mt-0.5 capitalize ${
+            isDark ? 'text-zinc-500' : 'text-zinc-400'
+          }`}
+        >
+          {wallet.type.replace('_', ' ')}
+          {wallet.currency === 'USD' ? ' · USD' : ''}
+        </p>
+      </div>
+
+      <p
+        className={`tabular text-[14px] font-semibold tracking-tight shrink-0 ${
+          isDark ? 'text-zinc-50' : 'text-zinc-900'
+        }`}
+      >
+        {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
+      </p>
+    </motion.button>
   );
 }
