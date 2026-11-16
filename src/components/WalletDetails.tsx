@@ -106,23 +106,32 @@ export default function WalletDetails({
     : undefined;
 
   const muted = isDark ? 'text-zinc-500' : 'text-zinc-400';
-  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ${\n    isDark ? 'bg-zinc-950 border-zinc-800 text-white' : 'bg-zinc-50 border-zinc-200 text-zinc-900'
-  }`;
+  const field =
+    'w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ' +
+    (isDark
+      ? 'bg-zinc-950 border-zinc-800 text-white'
+      : 'bg-zinc-50 border-zinc-200 text-zinc-900');
 
   return (
     <div
-      className={`fixed inset-0 z-40 flex flex-col ${\n        isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'
-      }`}
+      className={
+        'fixed inset-0 z-40 flex flex-col ' +
+        (isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900')
+      }
     >
       <div
-        className={`flex items-center justify-between px-4 h-14 border-b shrink-0 ${\n          isDark ? 'border-zinc-800' : 'border-zinc-200'
-        }`}
+        className={
+          'flex items-center justify-between px-4 h-14 border-b shrink-0 ' +
+          (isDark ? 'border-zinc-800' : 'border-zinc-200')
+        }
       >
         <button
           type="button"
           onClick={onBack}
-          className={`flex items-center gap-1 text-[13px] font-medium ${\n            isDark ? 'text-zinc-400' : 'text-zinc-500'
-          }`}
+          className={
+            'flex items-center gap-1 text-[13px] font-medium ' +
+            (isDark ? 'text-zinc-400' : 'text-zinc-500')
+          }
         >
           <DynamicIcon name="ChevronLeft" size={18} />
           Back
@@ -131,17 +140,19 @@ export default function WalletDetails({
           <button
             type="button"
             onClick={() => setIsEditing((v) => !v)}
-            className={`p-2 rounded-lg ${\n              isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200 text-zinc-500'
-            }`}
+            className={
+              'p-2 rounded-lg ' +
+              (isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200 text-zinc-500')
+            }
           >
             <DynamicIcon name={isEditing ? 'X' : 'Edit3'} size={16} />
           </button>
           <button
             type="button"
             onClick={() => {
-              if (confirm(`Delete ${wallet.name}?`)) onDeleteWallet(wallet.id);
+              if (confirm('Delete ' + wallet.name + '?')) onDeleteWallet(wallet.id);
             }}
-            className={`p-2 rounded-lg ${isDark ? 'text-rose-400' : 'text-rose-500'}`}
+            className={'p-2 rounded-lg ' + (isDark ? 'text-rose-400' : 'text-rose-500')}
           >
             <DynamicIcon name="Trash2" size={16} />
           </button>
@@ -152,7 +163,7 @@ export default function WalletDetails({
         {isEditing ? (
           <div className="max-w-md mx-auto px-5 py-6 space-y-4">
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Balance
               </label>
               <input
@@ -165,7 +176,7 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Name
               </label>
               <input
@@ -177,7 +188,7 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Note
               </label>
               <input
@@ -189,7 +200,7 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Type
               </label>
               <div className="grid grid-cols-4 gap-1.5">
@@ -198,14 +209,16 @@ export default function WalletDetails({
                     key={t}
                     type="button"
                     onClick={() => setEditType(t)}
-                    className={`py-2 rounded-xl text-[11px] font-medium capitalize border ${\n                      editType === t
+                    className={
+                      'py-2 rounded-xl text-[11px] font-medium capitalize border ' +
+                      (editType === t
                         ? isDark
                           ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
                           : 'bg-zinc-900 text-white border-zinc-900'
                         : isDark
                           ? 'border-zinc-800 text-zinc-400'
-                          : 'border-zinc-200 text-zinc-500'
-                    }`}
+                          : 'border-zinc-200 text-zinc-500')
+                    }
                   >
                     {t}
                   </button>
@@ -214,7 +227,7 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Currency
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -223,14 +236,16 @@ export default function WalletDetails({
                     key={c}
                     type="button"
                     onClick={() => setEditCurrency(c)}
-                    className={`py-2 rounded-xl text-[12px] font-medium border ${\n                      editCurrency === c
+                    className={
+                      'py-2 rounded-xl text-[12px] font-medium border ' +
+                      (editCurrency === c
                         ? isDark
                           ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
                           : 'bg-zinc-900 text-white border-zinc-900'
                         : isDark
                           ? 'border-zinc-800 text-zinc-400'
-                          : 'border-zinc-200 text-zinc-500'
-                    }`}
+                          : 'border-zinc-200 text-zinc-500')
+                    }
                   >
                     {c}
                   </button>
@@ -239,7 +254,7 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Color
               </label>
               <div className="flex flex-wrap gap-2">
@@ -248,8 +263,10 @@ export default function WalletDetails({
                     key={color.value}
                     type="button"
                     onClick={() => setEditColor(color.value)}
-                    className={`h-7 w-7 rounded-full ${\n                      editColor === color.value ? 'ring-2 ring-offset-2 ring-zinc-400' : ''
-                    }`}
+                    className={
+                      'h-7 w-7 rounded-full ' +
+                      (editColor === color.value ? 'ring-2 ring-offset-2 ring-zinc-400' : '')
+                    }
                     style={{ backgroundColor: color.hex }}
                   />
                 ))}
@@ -257,7 +274,7 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+              <label className={'block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ' + muted}>
                 Icon
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -266,14 +283,16 @@ export default function WalletDetails({
                     key={iconName}
                     type="button"
                     onClick={() => setEditIcon(iconName)}
-                    className={`h-10 rounded-xl flex items-center justify-center border ${\n                      editIcon === iconName
+                    className={
+                      'h-10 rounded-xl flex items-center justify-center border ' +
+                      (editIcon === iconName
                         ? isDark
                           ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
                           : 'bg-zinc-900 text-white border-zinc-900'
                         : isDark
                           ? 'border-zinc-800 text-zinc-400'
-                          : 'border-zinc-200 text-zinc-500'
-                    }`}
+                          : 'border-zinc-200 text-zinc-500')
+                    }
                   >
                     <DynamicIcon name={iconName} size={16} />
                   </button>
@@ -284,8 +303,10 @@ export default function WalletDetails({
             <button
               type="button"
               onClick={handleSaveEdit}
-              className={`w-full py-2.5 rounded-xl text-[13px] font-medium ${\n                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
-              }`}
+              className={
+                'w-full py-2.5 rounded-xl text-[13px] font-medium ' +
+                (isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white')
+              }
             >
               Save changes
             </button>
@@ -294,8 +315,10 @@ export default function WalletDetails({
           <div className="max-w-md mx-auto px-5 py-8">
             <div className="text-center mb-8">
               <div
-                className={`mx-auto h-14 w-14 rounded-2xl overflow-hidden flex items-center justify-center mb-4 ${\n                  isDark ? 'bg-zinc-900' : 'bg-zinc-100'
-                }`}
+                className={
+                  'mx-auto h-14 w-14 rounded-2xl overflow-hidden flex items-center justify-center mb-4 ' +
+                  (isDark ? 'bg-zinc-900' : 'bg-zinc-100')
+                }
                 style={bankColor ? { backgroundColor: bankColor } : undefined}
               >
                 {wallet.image ? (
@@ -315,7 +338,7 @@ export default function WalletDetails({
                   />
                 )}
               </div>
-              <p className={`text-[12px] font-medium uppercase tracking-[0.12em] ${muted}`}>
+              <p className={'text-[12px] font-medium uppercase tracking-[0.12em] ' + muted}>
                 {wallet.type}
               </p>
               <h1 className="mt-1 text-[1.35rem] font-semibold tracking-tight">
@@ -325,30 +348,34 @@ export default function WalletDetails({
                 {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
               </p>
               {wallet.description && (
-                <p className={`mt-2 text-[13px] ${muted}`}>{wallet.description}</p>
+                <p className={'mt-2 text-[13px] ' + muted}>{wallet.description}</p>
               )}
 
               <button
                 type="button"
                 onClick={() => onAddTransactionClick(wallet.id)}
-                className={`mt-6 px-5 py-2.5 rounded-full text-[13px] font-medium ${\n                  isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
-                }`}
+                className={
+                  'mt-6 px-5 py-2.5 rounded-full text-[13px] font-medium ' +
+                  (isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white')
+                }
               >
                 Add transaction
               </button>
             </div>
 
-            <p className={`text-[11px] font-medium uppercase tracking-[0.1em] mb-2 ${muted}`}>
+            <p className={'text-[11px] font-medium uppercase tracking-[0.1em] mb-2 ' + muted}>
               Activity
             </p>
             <div
-              className={`rounded-2xl border overflow-hidden divide-y ${\n                isDark
+              className={
+                'rounded-2xl border overflow-hidden divide-y ' +
+                (isDark
                   ? 'bg-zinc-950 border-zinc-800/80 divide-zinc-800/80'
-                  : 'bg-white border-zinc-200/80 divide-zinc-100'
-              }`}
+                  : 'bg-white border-zinc-200/80 divide-zinc-100')
+              }
             >
               {transactions.length === 0 ? (
-                <p className={`text-center py-12 text-[13px] ${muted}`}>No transactions</p>
+                <p className={'text-center py-12 text-[13px] ' + muted}>No transactions</p>
               ) : (
                 transactions.slice(0, 40).map((t) => (
                   <TransactionItem
