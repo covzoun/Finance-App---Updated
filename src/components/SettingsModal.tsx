@@ -11,6 +11,7 @@ interface SettingsModalProps {
   onBackupComplete: () => void;
   hideBalances?: boolean;
   onToggleHideBalances?: () => void;
+  onOpenInsights?: () => void;
 }
 
 export default function SettingsModal({
@@ -23,6 +24,7 @@ export default function SettingsModal({
   onBackupComplete,
   hideBalances,
   onToggleHideBalances,
+  onOpenInsights,
 }: SettingsModalProps) {
   const isDark = themeMode === 'dark';
   const [showConfirmReset, setShowConfirmReset] = useState(false);
@@ -159,9 +161,7 @@ export default function SettingsModal({
                 type="button"
                 onClick={() => themeMode === 'light' && onToggleTheme()}
                 className={`flex-1 py-2.5 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 ${
-                  themeMode === 'dark'
-                    ? 'bg-zinc-800 text-zinc-50'
-                    : 'text-zinc-500'
+                  themeMode === 'dark' ? 'bg-zinc-800 text-zinc-50' : 'text-zinc-500'
                 }`}
               >
                 <DynamicIcon name="Moon" size={14} />
@@ -227,9 +227,7 @@ export default function SettingsModal({
                     setStatusMessage({ text: 'Backup downloaded.', type: 'success' });
                   }}
                   className={`py-2.5 px-3 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 ${
-                    isDark
-                      ? 'bg-zinc-100 text-zinc-900'
-                      : 'bg-zinc-900 text-white'
+                    isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
                   }`}
                 >
                   <DynamicIcon name="Download" size={14} />
@@ -305,6 +303,29 @@ export default function SettingsModal({
               )}
             </div>
           </div>
+
+          {onOpenInsights && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onOpenInsights();
+              }}
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border text-left ${
+                isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-zinc-200'
+              }`}
+            >
+              <span className="flex items-center gap-3 text-[13px] font-medium">
+                <DynamicIcon name="BarChart3" size={18} />
+                Insights
+              </span>
+              <DynamicIcon
+                name="ChevronRight"
+                size={16}
+                className={isDark ? 'text-zinc-600' : 'text-zinc-400'}
+              />
+            </button>
+          )}
 
           <div className="space-y-3">
             <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-rose-500">
