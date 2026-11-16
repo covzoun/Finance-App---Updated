@@ -402,41 +402,41 @@ export default function App() {
   return (
     <div className={isDark ? 'dark' : ''}>
       <div className={`min-h-screen ${isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'}`}>
-        <section className="max-w-md mx-auto px-6 pt-14 pb-6 relative">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className={`text-[11px] font-medium tracking-[0.14em] uppercase ${muted}`}>
-                Net worth
-              </p>
-              <h1 className="tabular mt-2 text-[2.75rem] sm:text-[3.25rem] font-semibold tracking-[-0.04em] leading-[1.05]">
-                {hideBalances ? '••••••' : formatPHP(totalNetWorth)}
-              </h1>
-              <div className={`mt-4 flex items-center gap-5 text-[13px] ${muted}`}>
-                <span className="flex items-center gap-1.5">
-                  <span className={`inline-block h-1.5 w-1.5 rounded-full ${isDark ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
-                  <span className={isDark ? 'text-emerald-400' : 'text-emerald-600'}>
-                    {hideBalances ? '•••' : formatPHP(monthlyIncome)}
-                  </span>
-                  <span>in</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className={`inline-block h-1.5 w-1.5 rounded-full ${isDark ? 'bg-rose-400' : 'bg-rose-500'}`} />
-                  <span className={isDark ? 'text-rose-400' : 'text-rose-500'}>
-                    {hideBalances ? '•••' : formatPHP(monthlyExpenses)}
-                  </span>
-                  <span>out</span>
-                </span>
-              </div>
-            </div>
+        <section className="max-w-md mx-auto px-6 pt-14 pb-8 relative">
+          <button
+            type="button"
+            onClick={() => setShowMenu((v) => !v)}
+            className={`absolute top-12 right-4 p-2 rounded-full transition-colors z-10 ${
+              isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200/70 text-zinc-500'
+            }`}
+            aria-label="Menu"
+          >
+            <DynamicIcon name="MoreHorizontal" size={20} />
+          </button>
 
-            <button
-              type="button"
-              onClick={() => setShowMenu((v) => !v)}
-              className={`mt-1 p-2 rounded-full transition-colors ${isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200/70 text-zinc-500'}`}
-              aria-label="Menu"
-            >
-              <DynamicIcon name="MoreHorizontal" size={20} />
-            </button>
+          <div className="text-center">
+            <p className={`text-[11px] font-medium tracking-[0.14em] uppercase ${muted}`}>
+              Net worth
+            </p>
+            <h1 className="tabular mt-3 text-[2.75rem] sm:text-[3.25rem] font-semibold tracking-[-0.04em] leading-[1.05]">
+              {hideBalances ? '••••••' : formatPHP(totalNetWorth)}
+            </h1>
+            <div className={`mt-4 flex items-center justify-center gap-5 text-[13px] ${muted}`}>
+              <span className="flex items-center gap-1.5">
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${isDark ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
+                <span className={isDark ? 'text-emerald-400' : 'text-emerald-600'}>
+                  {hideBalances ? '•••' : formatPHP(monthlyIncome)}
+                </span>
+                <span>in</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${isDark ? 'bg-rose-400' : 'bg-rose-500'}`} />
+                <span className={isDark ? 'text-rose-400' : 'text-rose-500'}>
+                  {hideBalances ? '•••' : formatPHP(monthlyExpenses)}
+                </span>
+                <span>out</span>
+              </span>
+            </div>
           </div>
 
           <AnimatePresence>
@@ -448,7 +448,7 @@ export default function App() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.98 }}
                   transition={{ duration: 0.15 }}
-                  className={`absolute right-6 top-16 z-50 w-48 rounded-2xl border py-1.5 shadow-xl ${
+                  className={`absolute right-4 top-20 z-50 w-48 rounded-2xl border py-1.5 shadow-xl ${
                     isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200'
                   }`}
                 >
