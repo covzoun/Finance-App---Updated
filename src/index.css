@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 @layer base {
@@ -16,19 +16,14 @@
     font-size: 15px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #f8fafc;
-    color: #0f172a;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-color: #0a0a0a;
-      color: #fafafa;
-    }
+    background: #fafafa;
+    color: #18181b;
+    letter-spacing: -0.011em;
   }
 
   * {
@@ -39,29 +34,32 @@
   *::-webkit-scrollbar {
     display: none;
   }
+
+  button, input, select, textarea {
+    font: inherit;
+  }
 }
 
 @layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
 }
 
-/* Date / datetime picker affordance */
-@layer utilities {
-  input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    margin-right: 6px;
-    opacity: 0.55;
-    transition: opacity 0.15s ease;
-  }
-  input[type="date"]::-webkit-calendar-picker-indicator:hover,
-  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
-    opacity: 1;
-  }
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
