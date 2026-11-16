@@ -25,13 +25,13 @@ jobs:
           node-version: 22
           cache: npm
 
+      # npm install is more tolerant than npm ci when lockfile drifts
       - name: Install
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
         env:
-          # Vite PWA / base path for project pages
           BASE_URL: /Finance-App---Updated/
 
       - name: Configure Pages
