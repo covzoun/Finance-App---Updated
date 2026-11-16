@@ -37,7 +37,6 @@ export default function App() {
   const [isAddDebtOpen, setIsAddDebtOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
   const [visibleTxCount] = useState(50);
 
   const [hideBalances, setHideBalances] = useState(
@@ -402,18 +401,7 @@ export default function App() {
   return (
     <div className={isDark ? 'dark' : ''}>
       <div className={`min-h-screen ${isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'}`}>
-        <section className="max-w-md mx-auto px-6 pt-14 pb-8 relative">
-          <button
-            type="button"
-            onClick={() => setShowMenu((v) => !v)}
-            className={`absolute top-12 right-4 p-2 rounded-full transition-colors z-10 ${
-              isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200/70 text-zinc-500'
-            }`}
-            aria-label="Menu"
-          >
-            <DynamicIcon name="MoreHorizontal" size={20} />
-          </button>
-
+        <section className="max-w-md mx-auto px-6 pt-14 pb-8">
           <div className="text-center">
             <p className={`text-[11px] font-medium tracking-[0.14em] uppercase ${muted}`}>
               Net worth
@@ -438,53 +426,6 @@ export default function App() {
               </span>
             </div>
           </div>
-
-          <AnimatePresence>
-            {showMenu && (
-              <>
-                <button type="button" className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} aria-label="Close menu" />
-                <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                  transition={{ duration: 0.15 }}
-                  className={`absolute right-4 top-20 z-50 w-48 rounded-2xl border py-1.5 shadow-xl ${
-                    isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200'
-                  }`}
-                >
-                  {[
-                    {
-                      label: hideBalances ? 'Show balances' : 'Hide balances',
-                      icon: hideBalances ? 'Eye' : 'EyeOff',
-                      action: () => { toggleHideBalances(); setShowMenu(false); },
-                    },
-                    {
-                      label: 'Insights',
-                      icon: 'BarChart3',
-                      action: () => { setShowAnalyticsPanel(true); setShowMenu(false); },
-                    },
-                    {
-                      label: 'Settings',
-                      icon: 'Settings',
-                      action: () => { setIsSettingsOpen(true); setShowMenu(false); },
-                    },
-                  ].map((item) => (
-                    <button
-                      key={item.label}
-                      type="button"
-                      onClick={item.action}
-                      className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] ${
-                        isDark ? 'hover:bg-zinc-800 text-zinc-200' : 'hover:bg-zinc-50 text-zinc-800'
-                      }`}
-                    >
-                      <DynamicIcon name={item.icon} size={16} className={muted} />
-                      {item.label}
-                    </button>
-                  ))}
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
         </section>
 
         <main className="max-w-md mx-auto px-5 pb-36">
@@ -565,18 +506,13 @@ export default function App() {
           )}
         </main>
 
-        <div className="fixed bottom-0 inset-x-0 z-30 pointer-events-none">
-          <div
-            className={`pointer-events-none h-10 bg-gradient-to-t ${
-              isDark ? 'from-zinc-950 to-transparent' : 'from-zinc-50 to-transparent'
-            }`}
-          />
-          <div className="pointer-events-auto max-w-md mx-auto px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="fixed bottom-0 inset-x-0 z-30">
+          <div className="max-w-md mx-auto px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <div
-              className={`relative flex items-center gap-1 rounded-[1.75rem] border px-1.5 py-1.5 shadow-lg backdrop-blur-2xl ${
+              className={`flex items-center rounded-full border px-2 py-1.5 backdrop-blur-xl ${
                 isDark
-                  ? 'bg-zinc-900/95 border-zinc-800 shadow-black/40'
-                  : 'bg-white/95 border-zinc-200/80 shadow-zinc-900/5'
+                  ? 'bg-zinc-900/90 border-zinc-800'
+                  : 'bg-white/90 border-zinc-200'
               }`}
             >
               {(
@@ -591,7 +527,7 @@ export default function App() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all ${
+                    className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-medium transition-colors ${
                       active
                         ? isDark
                           ? 'text-zinc-50'
@@ -600,18 +536,7 @@ export default function App() {
                     }`}
                   >
                     <DynamicIcon name={tab.icon} size={20} />
-                    <span className={`text-[10px] font-medium ${active ? '' : 'opacity-80'}`}>
-                      {tab.label}
-                    </span>
-                    <span
-                      className={`mt-0.5 h-0.5 w-3 rounded-full transition-opacity ${
-                        active
-                          ? isDark
-                            ? 'bg-zinc-100 opacity-100'
-                            : 'bg-zinc-900 opacity-100'
-                          : 'opacity-0'
-                      }`}
-                    />
+                    {tab.label}
                   </button>
                 );
               })}
@@ -623,7 +548,7 @@ export default function App() {
                   else if (activeTab === 'activity') handleOpenTxModal();
                   else setIsAddDebtOpen(true);
                 }}
-                className={`mx-0.5 h-12 w-12 shrink-0 rounded-2xl flex items-center justify-center active:scale-95 transition-transform ${
+                className={`mx-1 h-11 w-11 shrink-0 rounded-full flex items-center justify-center active:scale-95 transition-transform ${
                   isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
                 }`}
                 aria-label="Add"
@@ -634,7 +559,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveTab('debts')}
-                className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all ${
+                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-medium transition-colors ${
                   activeTab === 'debts'
                     ? isDark
                       ? 'text-zinc-50'
@@ -643,28 +568,16 @@ export default function App() {
                 }`}
               >
                 <DynamicIcon name="Users" size={20} />
-                <span className={`text-[10px] font-medium ${activeTab === 'debts' ? '' : 'opacity-80'}`}>
-                  Debts
-                </span>
-                <span
-                  className={`mt-0.5 h-0.5 w-3 rounded-full transition-opacity ${
-                    activeTab === 'debts'
-                      ? isDark
-                        ? 'bg-zinc-100 opacity-100'
-                        : 'bg-zinc-900 opacity-100'
-                      : 'opacity-0'
-                  }`}
-                />
+                Debts
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsSettingsOpen(true)}
-                className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all ${muted}`}
+                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-medium transition-colors ${muted}`}
               >
                 <DynamicIcon name="Settings" size={20} />
-                <span className="text-[10px] font-medium opacity-80">More</span>
-                <span className="mt-0.5 h-0.5 w-3 rounded-full opacity-0" />
+                Settings
               </button>
             </div>
           </div>
@@ -693,6 +606,7 @@ export default function App() {
           onResetApp={handleResetApp}
           hideBalances={hideBalances}
           onToggleHideBalances={toggleHideBalances}
+          onOpenInsights={() => setShowAnalyticsPanel(true)}
         />
 
         <AnimatePresence>
