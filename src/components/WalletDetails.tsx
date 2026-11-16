@@ -26,56 +26,19 @@ interface WalletDetailsProps {
 }
 
 const COLOR_PRESETS = [
-  { name: 'Teal Forest', value: 'teal', hex: '#14b8a6' },
-  { name: 'Maya Purple', value: 'purple', hex: '#a855f7' },
-  { name: 'GCash Blue', value: 'blue', hex: '#2563eb' },
-  { name: 'Crimson Slate', value: 'red', hex: '#e11d48' },
-  { name: 'Sunset Bronze', value: 'amber', hex: '#f59e0b' },
-  { name: 'Rose Petal', value: 'pink', hex: '#ec4899' },
-  { name: 'Obsidian Black', value: 'slate', hex: '#475569' },
+  { name: 'Teal', value: 'teal', hex: '#14b8a6' },
+  { name: 'Purple', value: 'purple', hex: '#a855f7' },
+  { name: 'Blue', value: 'blue', hex: '#2563eb' },
+  { name: 'Red', value: 'red', hex: '#e11d48' },
+  { name: 'Amber', value: 'amber', hex: '#f59e0b' },
+  { name: 'Pink', value: 'pink', hex: '#ec4899' },
+  { name: 'Slate', value: 'slate', hex: '#475569' },
 ];
 
 const ICON_PRESETS = [
-  'Wallet', 'Coins', 'Smartphone', 'Landmark', 'CreditCard', 'PiggyBank', 'Briefcase', 'Shield', 'Activity', 'Sparkles'
+  'Wallet', 'Coins', 'Smartphone', 'Landmark', 'CreditCard',
+  'PiggyBank', 'Briefcase', 'Shield', 'Activity', 'Sparkles',
 ];
-
-const getColorTheme = (colorClass: string, isDark: boolean) => {
-  const c = colorClass.toLowerCase();
-  if (c.includes('blue')) {
-    return {
-      bg: isDark ? 'bg-blue-950/40 border border-blue-900/30' : 'bg-blue-500/10',
-      text: isDark ? 'text-blue-400 font-bold' : 'text-blue-600',
-    };
-  }
-  if (c.includes('indigo') || c.includes('purple')) {
-    return {
-      bg: isDark ? 'bg-indigo-950/40 border border-indigo-900/30' : 'bg-indigo-500/10',
-      text: isDark ? 'text-indigo-400' : 'text-indigo-600',
-    };
-  }
-  if (c.includes('emerald') || c.includes('teal')) {
-    return {
-      bg: isDark ? 'bg-emerald-950/40 border border-emerald-900/30' : 'bg-emerald-500/10',
-      text: isDark ? 'text-emerald-400 font-bold' : 'text-emerald-600',
-    };
-  }
-  if (c.includes('orange') || c.includes('amber')) {
-    return {
-      bg: isDark ? 'bg-amber-950/40 border border-amber-900/30' : 'bg-orange-500/10',
-      text: isDark ? 'text-amber-400' : 'text-orange-600',
-    };
-  }
-  if (c.includes('rose') || c.includes('pink') || c.includes('red')) {
-    return {
-      bg: isDark ? 'bg-rose-950/40 border border-rose-900/30' : 'bg-rose-500/10',
-      text: isDark ? 'text-rose-400' : 'text-rose-600',
-    };
-  }
-  return {
-    bg: isDark ? 'bg-neutral-800' : 'bg-neutral-500/10',
-    text: isDark ? 'text-neutral-300' : 'text-neutral-600',
-  };
-};
 
 export default function WalletDetails({
   wallet,
@@ -90,60 +53,37 @@ export default function WalletDetails({
   const isDark = themeMode === 'dark';
   const [isEditing, setIsEditing] = useState(false);
 
-  // Form Fields
   const [editName, setEditName] = useState(wallet.name);
   const [editDesc, setEditDesc] = useState(wallet.description || '');
-  const [editColor, setEditColor] = useState(wallet.color);
-  const [editIcon, setEditIcon] = useState(wallet.icon);
+  const [editColor, setEditColor] = useState(wallet.color || 'slate');
+  const [editIcon, setEditIcon] = useState(wallet.icon || 'Wallet');
   const [editCurrency, setEditCurrency] = useState<'PHP' | 'USD'>(wallet.currency || 'PHP');
-  const [editType, setEditType] = useState<WalletType>(wallet.type || 'wallet');
-  const [editBalance, setEditBalance] = useState<number>(wallet.balance);
+  const [editType, setEditType] = useState<WalletType>(wallet.type);
+  const [editBalance, setEditBalance] = useState(wallet.balance);
 
-  // Custom Image support in editing
-  const [editAvatarMode, setEditAvatarMode] = useState<'icon' | 'image'>(wallet.image ? 'image' : 'icon');
-  const [editSelectedImage, setEditSelectedImage] = useState<string>(wallet.image || '');
-  const [editCustomImageUrl, setEditCustomImageUrl] = useState<string>('');
-
-  // Keep fields synchronized if wallet changes
   useEffect(() => {
     setEditName(wallet.name);
     setEditDesc(wallet.description || '');
-    setEditColor(wallet.color);
-    setEditIcon(wallet.icon);
+    setEditColor(wallet.color || 'slate');
+    setEditIcon(wallet.icon || 'Wallet');
     setEditCurrency(wallet.currency || 'PHP');
-    setEditType(wallet.type || 'wallet');
+    setEditType(wallet.type);
     setEditBalance(wallet.balance);
-    setEditAvatarMode(wallet.image ? 'image' : 'icon');
-    setEditSelectedImage(wallet.image || '');
-    setEditCustomImageUrl('');
   }, [wallet]);
-
-  const detailsTheme = getColorTheme(wallet.color, isDark);
-
-  // Filter transactions for this wallet
-  const walletTransactions = transactions.filter(
-    (t) => t.walletId === wallet.id || t.toWalletId === wallet.id
-  );
 
   const formatCurrency = (value: number, currency?: 'PHP' | 'USD') => {
     const safeCurrency = currency || 'PHP';
     return new Intl.NumberFormat(safeCurrency === 'USD' ? 'en-US' : 'en-PH', {
       style: 'currency',
       currency: safeCurrency,
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     }).format(value);
   };
 
   const handleSaveEdit = () => {
     if (!editName.trim()) return;
-
-    const finalImage = editAvatarMode === 'image'
-      ? (editCustomImageUrl.trim() || editSelectedImage || undefined)
-      : undefined;
-
     const balanceHasChanged = editBalance !== wallet.balance;
-
     onEditWallet(
       wallet.id,
       editName.trim(),
@@ -153,116 +93,118 @@ export default function WalletDetails({
       editCurrency,
       editType,
       balanceHasChanged ? editBalance : undefined,
-      finalImage
+      wallet.image
     );
     setIsEditing(false);
   };
 
+  const bankId = wallet.icon?.startsWith('bank:')
+    ? wallet.icon.replace('bank:', '')
+    : null;
+  const bankColor = bankId
+    ? BANK_PRESETS.find((p) => p.id === bankId)?.color
+    : undefined;
+
+  const muted = isDark ? 'text-zinc-500' : 'text-zinc-400';
+  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ${\n    isDark ? 'bg-zinc-950 border-zinc-800 text-white' : 'bg-zinc-50 border-zinc-200 text-zinc-900'
+  }`;
+
   return (
-    <div className={`flex flex-col h-full ${isDark ? 'bg-neutral-900 text-white' : 'bg-neutral-50/50 text-neutral-800'}`} id={`wallet-details-${wallet.id}`}>
-      {/* Detail Header / Action bar */}
-      <div className={`flex items-center justify-between border-b px-5 py-4 shrink-0 ${
-        isDark ? 'bg-neutral-900 border-neutral-800/80' : 'bg-white border-neutral-100'
-      }`}>
+    <div
+      className={`fixed inset-0 z-40 flex flex-col ${\n        isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'
+      }`}
+    >
+      <div
+        className={`flex items-center justify-between px-4 h-14 border-b shrink-0 ${\n          isDark ? 'border-zinc-800' : 'border-zinc-200'
+        }`}
+      >
         <button
+          type="button"
           onClick={onBack}
-          className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer ${
-            isDark ? 'text-neutral-400 hover:text-white' : 'text-neutral-400 hover:text-neutral-800'
+          className={`flex items-center gap-1 text-[13px] font-medium ${\n            isDark ? 'text-zinc-400' : 'text-zinc-500'
           }`}
         >
-          <DynamicIcon name="ChevronLeft" size={14} />
+          <DynamicIcon name="ChevronLeft" size={18} />
           Back
         </button>
-
-        <div className="flex gap-1.5">
+        <div className="flex items-center gap-1">
           <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={`rounded-xl p-2 transition-all cursor-pointer ${
-              isDark ? 'text-neutral-400 hover:bg-neutral-800 hover:text-white' : 'text-neutral-400 hover:bg-neutral-500/10 hover:text-neutral-800'
+            type="button"
+            onClick={() => setIsEditing((v) => !v)}
+            className={`p-2 rounded-lg ${\n              isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200 text-zinc-500'
             }`}
-            title="Edit Wallet Info"
           >
-            <DynamicIcon name={isEditing ? 'X' : 'Edit3'} size={15} />
+            <DynamicIcon name={isEditing ? 'X' : 'Edit3'} size={16} />
           </button>
-          
           <button
+            type="button"
             onClick={() => {
-              if (confirm(`Are you sure you want to delete ${wallet.name}? All history will remain on dashboard.`)) {
-                onDeleteWallet(wallet.id);
-              }
+              if (confirm(`Delete ${wallet.name}?`)) onDeleteWallet(wallet.id);
             }}
-            className={`rounded-xl p-2 transition-all cursor-pointer ${
-              isDark ? 'text-rose-400 hover:bg-rose-950/40 hover:text-rose-300' : 'text-neutral-400 hover:bg-rose-500/10 hover:text-rose-600'
-            }`}
-            title="Delete Wallet"
+            className={`p-2 rounded-lg ${isDark ? 'text-rose-400' : 'text-rose-500'}`}
           >
-            <DynamicIcon name="Trash2" size={15} />
+            <DynamicIcon name="Trash2" size={16} />
           </button>
         </div>
       </div>
 
-      {/* Detail Body */}
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-6 pb-32 space-y-6">
-        {/* Editing state or Main Card display */}
+      <div className="flex-1 overflow-y-auto">
         {isEditing ? (
-          <div className={`border rounded-2xl p-5 space-y-4 shadow-sm ${
-            isDark ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-neutral-100'
-          }`}>
-            <h3 className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-neutral-300' : 'text-neutral-400'}`}>Edit Wallet Details</h3>
-            
-            {/* Account Balance Editor (Always editable, at the very top!) */}
+          <div className="max-w-md mx-auto px-5 py-6 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1 uppercase tracking-wider">Account Balance ({editCurrency})</label>
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Balance
+              </label>
               <input
                 type="number"
                 step="any"
                 value={editBalance}
-                onChange={(e) => setEditBalance(Number(e.target.value) || 0)}
-                className={`w-full text-xs rounded-xl border px-3.5 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500 font-bold font-mono ${
-                  isDark ? 'bg-neutral-900 border-neutral-800 text-white' : 'bg-neutral-50 border-neutral-200/60 text-neutral-800'
-                }`}
+                onChange={(e) => setEditBalance(parseFloat(e.target.value) || 0)}
+                className={field}
               />
-              <p className="text-xs text-neutral-400 mt-1">Editing the balance will automatically log a balance adjustment transaction in your history.</p>
             </div>
 
-            {/* Currency Choice */}
             <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1 uppercase tracking-wider">Currency</label>
-              <div className="grid grid-cols-2 gap-2">
-                {(['PHP', 'USD'] as const).map((curr) => (
-                  <button
-                    key={curr}
-                    type="button"
-                    onClick={() => setEditCurrency(curr)}
-                    className={`py-2 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer ${
-                      editCurrency === curr
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : isDark
-                        ? 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:bg-neutral-800'
-                        : 'bg-neutral-50 text-neutral-500 border-neutral-200 hover:bg-neutral-500/10'
-                    }`}
-                  >
-                    {curr === 'PHP' ? 'PHP (₱)' : 'USD ($)'}
-                  </button>
-                ))}
-              </div>
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Name
+              </label>
+              <input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className={field}
+              />
             </div>
 
-            {/* Account Type Option */}
             <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1 uppercase tracking-wider">Account Type</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                {(['wallet', 'savings', 'investment', 'others'] as const).map((t) => (
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Note
+              </label>
+              <input
+                type="text"
+                value={editDesc}
+                onChange={(e) => setEditDesc(e.target.value)}
+                className={field}
+              />
+            </div>
+
+            <div>
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Type
+              </label>
+              <div className="grid grid-cols-4 gap-1.5">
+                {(['wallet', 'savings', 'investment', 'others'] as WalletType[]).map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => setEditType(t)}
-                    className={`py-2 rounded-xl text-xs font-bold border transition-all text-center capitalize cursor-pointer ${
-                      editType === t
-                        ? 'bg-blue-600 text-white border-blue-600'
+                    className={`py-2 rounded-xl text-[11px] font-medium capitalize border ${\n                      editType === t
+                        ? isDark
+                          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
+                          : 'bg-zinc-900 text-white border-zinc-900'
                         : isDark
-                        ? 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:bg-neutral-800'
-                        : 'bg-neutral-50 text-neutral-500 border-neutral-200 hover:bg-neutral-500/10'
+                          ? 'border-zinc-800 text-zinc-400'
+                          : 'border-zinc-200 text-zinc-500'
                     }`}
                   >
                     {t}
@@ -272,304 +214,153 @@ export default function WalletDetails({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1 uppercase tracking-wider">Account Name</label>
-              <input
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                className={`w-full text-xs rounded-xl border px-3.5 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                  isDark ? 'bg-neutral-900 border-neutral-800 text-white' : 'bg-neutral-50 border-neutral-200/60 text-neutral-800'
-                }`}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1 uppercase tracking-wider">Description (Optional)</label>
-              <input
-                type="text"
-                value={editDesc}
-                onChange={(e) => setEditDesc(e.target.value)}
-                className={`w-full text-xs rounded-xl border px-3.5 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                  isDark ? 'bg-neutral-900 border-neutral-800 text-white' : 'bg-neutral-50 border-neutral-200/60 text-neutral-800'
-                }`}
-                placeholder="Leave blank for none"
-              />
-            </div>
-
-            {/* Color Accent Selector */}
-            <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1.5 uppercase tracking-wider">Accent Color</label>
-              <div className="flex flex-wrap gap-2">
-                {COLOR_PRESETS.map((color) => (
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Currency
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {(['PHP', 'USD'] as const).map((c) => (
                   <button
-                    key={color.name}
+                    key={c}
                     type="button"
-                    onClick={() => setEditColor(color.value)}
-                    className={`h-7 w-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                      editColor === color.value ? 'ring-2 ring-blue-500 scale-110' : 'hover:scale-105'
+                    onClick={() => setEditCurrency(c)}
+                    className={`py-2 rounded-xl text-[12px] font-medium border ${\n                      editCurrency === c
+                        ? isDark
+                          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
+                          : 'bg-zinc-900 text-white border-zinc-900'
+                        : isDark
+                          ? 'border-zinc-800 text-zinc-400'
+                          : 'border-zinc-200 text-zinc-500'
                     }`}
-                    style={{
-                      backgroundColor: color.hex
-                    }}
-                    title={color.name}
                   >
-                    {editColor === color.value && (
-                      <DynamicIcon name="Check" className="text-white drop-shadow-xs" size={14} />
-                    )}
+                    {c}
                   </button>
                 ))}
               </div>
-            </div>            {/* Avatar Visual Type Selection (Icon vs Image) */}
+            </div>
+
             <div>
-              <label className="block text-xs font-bold text-neutral-400 mb-1.5 uppercase tracking-wider">
-                Account Visual Style
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Color
               </label>
-              <div className={`p-1 rounded-xl flex border transition-all ${
-                isDark ? 'bg-neutral-900 border-neutral-800' : 'bg-neutral-500/10 border-neutral-200'
-              }`}>
-                <button
-                  type="button"
-                  onClick={() => setEditAvatarMode('icon')}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    editAvatarMode === 'icon'
-                      ? isDark ? 'bg-neutral-900 text-blue-400 font-extrabold border border-neutral-800' : 'bg-white text-blue-600 shadow-xs font-extrabold border border-neutral-200'
-                      : isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-500 hover:text-neutral-700'
-                  }`}
-                >
-                  <DynamicIcon name="Sparkles" size={13} />
-                  Lucide Icon
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditAvatarMode('image')}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    editAvatarMode === 'image'
-                      ? isDark ? 'bg-neutral-900 text-blue-400 font-extrabold border border-neutral-800' : 'bg-white text-blue-600 shadow-xs font-extrabold border border-neutral-200'
-                      : isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-500 hover:text-neutral-700'
-                  }`}
-                >
-                  <DynamicIcon name="Image" size={13} />
-                  Custom Image
-                </button>
-              </div>
-            </div>
-
-            {editAvatarMode === 'icon' ? (
-              /* Icon Selector */
-              <div>
-                <label className="block text-xs font-bold text-neutral-400 mb-1.5 uppercase tracking-wider">Account Icon</label>
-                <div className="grid grid-cols-5 gap-1.5">
-                  {ICON_PRESETS.map((iconName) => (
-                    <button
-                      key={iconName}
-                      type="button"
-                      onClick={() => setEditIcon(iconName)}
-                      className={`h-9 rounded-xl flex items-center justify-center border transition-all cursor-pointer ${
-                        editIcon === iconName
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : isDark
-                          ? 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:bg-neutral-800'
-                          : 'bg-neutral-50 text-neutral-400 border-neutral-200/50 hover:bg-neutral-500/10/50'
-                      }`}
-                    >
-                      <DynamicIcon name={iconName} size={15} />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              /* Image Options */
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-neutral-400 mb-1.5 uppercase tracking-wider">
-                    Select Local Image
-                  </label>
-                  <div className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-all ${
-                    editSelectedImage 
-                      ? 'border-blue-500 bg-blue-500/100/5' 
-                      : isDark ? 'border-neutral-800 hover:border-neutral-700 bg-neutral-900/50' : 'border-neutral-200 hover:border-neutral-300 bg-neutral-50'
-                  }`}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      id="edit-local-image-upload"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setEditSelectedImage(reader.result as string);
-                            setEditCustomImageUrl('');
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                    <label htmlFor="edit-local-image-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
-                      {editSelectedImage ? (
-                        <div className="relative group">
-                          <img
-                            src={editSelectedImage}
-                            alt="Uploaded"
-                            className="h-16 w-16 rounded-xl object-cover border border-neutral-300 dark:border-neutral-850"
-                          />
-                          <div className="absolute inset-0 bg-black/40 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs text-white font-bold transition-opacity">
-                            Change
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center gap-1 text-neutral-400">
-                          <DynamicIcon name="Upload" size={20} className="text-blue-500" />
-                          <span className="text-xs font-bold">Upload local image</span>
-                          <span className="text-xs text-neutral-500">Supports PNG, JPG, GIF</span>
-                        </div>
-                      )}
-                    </label>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-neutral-400 mb-1.5 uppercase tracking-wider">
-                    Or Paste Custom Image URL
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="https://example.com/your-image.png"
-                    value={editCustomImageUrl}
-                    onChange={(e) => setEditCustomImageUrl(e.target.value)}
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                      isDark
-                        ? 'bg-neutral-900 border-neutral-800 text-white placeholder-neutral-650'
-                        : 'bg-neutral-50 border-neutral-200 text-neutral-800 placeholder-neutral-400'
+              <div className="flex flex-wrap gap-2">
+                {COLOR_PRESETS.map((color) => (
+                  <button
+                    key={color.value}
+                    type="button"
+                    onClick={() => setEditColor(color.value)}
+                    className={`h-7 w-7 rounded-full ${\n                      editColor === color.value ? 'ring-2 ring-offset-2 ring-zinc-400' : ''
                     }`}
+                    style={{ backgroundColor: color.hex }}
                   />
-                  {editCustomImageUrl.trim() && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="text-xs text-neutral-400">Preview:</span>
-                      <div className="h-8 w-8 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800">
-                        <img
-                          src={editCustomImageUrl}
-                          alt="Preview"
-                          className="h-full w-full object-cover"
-                          referrerPolicy="no-referrer"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/fallback/150/150';
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
-            )}
-
-            <div className="flex gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className={`flex-1 py-2.5 px-3 text-xs font-semibold rounded-xl border cursor-pointer transition-colors ${
-                  isDark ? 'bg-neutral-900 border-neutral-800 hover:bg-neutral-800 text-neutral-400' : 'bg-white border-neutral-200 hover:bg-neutral-500/10 text-neutral-500'
-                }`}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveEdit}
-                className="flex-1 py-2.5 px-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors cursor-pointer"
-              >
-                Save
-              </button>
             </div>
+
+            <div>
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${muted}`}>
+                Icon
+              </label>
+              <div className="grid grid-cols-5 gap-2">
+                {ICON_PRESETS.map((iconName) => (
+                  <button
+                    key={iconName}
+                    type="button"
+                    onClick={() => setEditIcon(iconName)}
+                    className={`h-10 rounded-xl flex items-center justify-center border ${\n                      editIcon === iconName
+                        ? isDark
+                          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
+                          : 'bg-zinc-900 text-white border-zinc-900'
+                        : isDark
+                          ? 'border-zinc-800 text-zinc-400'
+                          : 'border-zinc-200 text-zinc-500'
+                    }`}
+                  >
+                    <DynamicIcon name={iconName} size={16} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSaveEdit}
+              className={`w-full py-2.5 rounded-xl text-[13px] font-medium ${\n                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+              }`}
+            >
+              Save changes
+            </button>
           </div>
         ) : (
-          /* Sleek borderless centered header and details visualization */
-          <div className={`text-center py-8 shrink-0 border rounded-2xl p-6 shadow-xs ${
-            isDark ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-neutral-100'
-          }`}>
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl overflow-hidden mb-3 bg-neutral-500/10 dark:bg-neutral-850 border border-neutral-200/40 dark:border-neutral-800/40">
-              {wallet.image ? (
-                <img
-                  src={wallet.image}
-                  alt={wallet.name}
-                  className="h-full w-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              ) : wallet.icon?.startsWith('bank:') ? (
-                <div 
-                  className="flex h-full w-full items-center justify-center" 
-                  style={{ backgroundColor: BANK_PRESETS.find(p => p.id === wallet.icon.replace('bank:', ''))?.color || '#000' }}
-                >
-                  <BankLogo bank={wallet.icon.replace('bank:', '')} size={32} />
-                </div>
-              ) : (
-                <div className={`flex h-full w-full items-center justify-center ${detailsTheme.bg}`}>
-                  <DynamicIcon name={wallet.icon} className={detailsTheme.text} size={24} />
-                </div>
-              )}
-            </div>
-            <h2 className={`font-sans font-black tracking-tight text-xs ${isDark ? 'text-neutral-100' : 'text-neutral-800'}`}>{wallet.name}</h2>
-            {wallet.description && (
-              <p className={`text-xs mt-1 ${isDark ? 'text-neutral-400' : 'text-neutral-400'}`}>{wallet.description}</p>
-            )}
-            <p className={`font-sans text-3xl font-black tracking-tight mt-4 ${isDark ? 'text-neutral-50' : 'text-neutral-950'}`}>
-              {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
-            </p>
-            <div className={`inline-flex mt-3 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-widest ${
-              isDark ? 'bg-neutral-900 text-neutral-400 border border-neutral-800' : 'bg-neutral-500/10 text-neutral-500'
-            }`}>
-              {wallet.type.replace('_', ' ')} • {wallet.currency || 'PHP'}
-            </div>
-
-            {/* Fixed Rate Conversion Text strictly ONLY inside USD wallets */}
-            {wallet.currency === 'USD' && (
-              <p className={`text-xs mt-3 font-mono uppercase tracking-wider font-bold ${
-                isDark ? 'text-blue-400/80' : 'text-blue-600/80'
-              }`}>
-                * Conversion rate: $1 USD = ₱58.5 PHP
-              </p>
-            )}
-          </div>
-        )}
-
-        
-        {!isEditing && (
-          <>
-            <div className="shrink-0">
-              <button
-                onClick={() => onAddTransactionClick(wallet.id)}
-                className="w-full py-3.5 px-4 rounded-xl bg-blue-600 text-white font-bold uppercase text-sm tracking-widest hover:bg-blue-700 active:scale-98 transition-all shadow-md shadow-blue-500/10 flex items-center justify-center gap-2 cursor-pointer"
+          <div className="max-w-md mx-auto px-5 py-8">
+            <div className="text-center mb-8">
+              <div
+                className={`mx-auto h-14 w-14 rounded-2xl overflow-hidden flex items-center justify-center mb-4 ${\n                  isDark ? 'bg-zinc-900' : 'bg-zinc-100'
+                }`}
+                style={bankColor ? { backgroundColor: bankColor } : undefined}
               >
-                <DynamicIcon name="PlusCircle" size={13} />
-                Record Transaction
+                {wallet.image ? (
+                  <img
+                    src={wallet.image}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : bankId ? (
+                  <BankLogo bank={bankId} size={28} />
+                ) : (
+                  <DynamicIcon
+                    name={wallet.icon || 'Wallet'}
+                    size={22}
+                    className={muted}
+                  />
+                )}
+              </div>
+              <p className={`text-[12px] font-medium uppercase tracking-[0.12em] ${muted}`}>
+                {wallet.type}
+              </p>
+              <h1 className="mt-1 text-[1.35rem] font-semibold tracking-tight">
+                {wallet.name}
+              </h1>
+              <p className="tabular mt-3 text-[2rem] font-semibold tracking-[-0.03em]">
+                {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
+              </p>
+              {wallet.description && (
+                <p className={`mt-2 text-[13px] ${muted}`}>{wallet.description}</p>
+              )}
+
+              <button
+                type="button"
+                onClick={() => onAddTransactionClick(wallet.id)}
+                className={`mt-6 px-5 py-2.5 rounded-full text-[13px] font-medium ${\n                  isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+                }`}
+              >
+                Add transaction
               </button>
             </div>
-            {/* Wallet specific Transactions */}
-            <div className="space-y-4">
-              <h4 className={`font-sans font-bold text-xs uppercase tracking-widest flex items-center gap-2 ${
-                isDark ? 'text-neutral-400' : 'text-neutral-400'
-              }`}>
-                <DynamicIcon name="History" size={14} />
-                Account Activity
-              </h4>
-              {walletTransactions.length === 0 ? (
-                <div className={`text-center py-10 rounded-2xl border border-dashed text-xs font-medium ${
-                  isDark ? 'bg-neutral-900 border-neutral-800 text-neutral-500' : 'bg-white border-neutral-200 text-neutral-400'
-                }`}>
-                  No transactions registered for this wallet.
-                </div>
+
+            <p className={`text-[11px] font-medium uppercase tracking-[0.1em] mb-2 ${muted}`}>
+              Activity
+            </p>
+            <div
+              className={`rounded-2xl border overflow-hidden divide-y ${\n                isDark
+                  ? 'bg-zinc-950 border-zinc-800/80 divide-zinc-800/80'
+                  : 'bg-white border-zinc-200/80 divide-zinc-100'
+              }`}
+            >
+              {transactions.length === 0 ? (
+                <p className={`text-center py-12 text-[13px] ${muted}`}>No transactions</p>
               ) : (
-                <div className="flex flex-col gap-2.5">
-                  {walletTransactions
-                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                    .map((tx) => (
-                      <TransactionItem key={tx.id} transaction={tx} wallets={wallets} themeMode={themeMode} />
-                    ))}
-                </div>
+                transactions.slice(0, 40).map((t) => (
+                  <TransactionItem
+                    key={t.id}
+                    transaction={t}
+                    wallets={wallets}
+                    themeMode={themeMode}
+                  />
+                ))
               )}
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
