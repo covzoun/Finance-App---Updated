@@ -487,7 +487,7 @@ export default function App() {
           </AnimatePresence>
         </section>
 
-        <main className="max-w-md mx-auto px-5 pb-32">
+        <main className="max-w-md mx-auto px-5 pb-36">
           {activeTab === 'wallets' && (
             <div className="space-y-2">
               {wallets.length === 0 ? (
@@ -565,18 +565,24 @@ export default function App() {
           )}
         </main>
 
-        <div className="fixed bottom-0 inset-x-0 z-30">
-          <div className="max-w-md mx-auto px-5 pb-5 flex items-end justify-between gap-3">
-            <nav
-              className={`flex-1 flex p-1 rounded-2xl border backdrop-blur-xl ${
-                isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white/90 border-zinc-200'
+        <div className="fixed bottom-0 inset-x-0 z-30 pointer-events-none">
+          <div
+            className={`pointer-events-none h-10 bg-gradient-to-t ${
+              isDark ? 'from-zinc-950 to-transparent' : 'from-zinc-50 to-transparent'
+            }`}
+          />
+          <div className="pointer-events-auto max-w-md mx-auto px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <div
+              className={`relative flex items-center gap-1 rounded-[1.75rem] border px-1.5 py-1.5 shadow-lg backdrop-blur-2xl ${
+                isDark
+                  ? 'bg-zinc-900/95 border-zinc-800 shadow-black/40'
+                  : 'bg-white/95 border-zinc-200/80 shadow-zinc-900/5'
               }`}
             >
               {(
                 [
                   { id: 'wallets' as const, label: 'Wallets', icon: 'Wallet' },
                   { id: 'activity' as const, label: 'Activity', icon: 'List' },
-                  { id: 'debts' as const, label: 'Debts', icon: 'Users' },
                 ] as const
               ).map((tab) => {
                 const active = activeTab === tab.id;
@@ -585,34 +591,82 @@ export default function App() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex flex-col items-center gap-0.5 py-2 rounded-xl text-[10px] font-medium transition-colors ${
+                    className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all ${
                       active
                         ? isDark
-                          ? 'bg-zinc-800 text-zinc-50'
-                          : 'bg-zinc-100 text-zinc-900'
+                          ? 'text-zinc-50'
+                          : 'text-zinc-900'
                         : muted
                     }`}
                   >
-                    <DynamicIcon name={tab.icon} size={18} />
-                    {tab.label}
+                    <DynamicIcon name={tab.icon} size={20} />
+                    <span className={`text-[10px] font-medium ${active ? '' : 'opacity-80'}`}>
+                      {tab.label}
+                    </span>
+                    <span
+                      className={`mt-0.5 h-0.5 w-3 rounded-full transition-opacity ${
+                        active
+                          ? isDark
+                            ? 'bg-zinc-100 opacity-100'
+                            : 'bg-zinc-900 opacity-100'
+                          : 'opacity-0'
+                      }`}
+                    />
                   </button>
                 );
               })}
-            </nav>
-            <button
-              type="button"
-              onClick={() => {
-                if (activeTab === 'wallets') setIsAddWalletOpen(true);
-                else if (activeTab === 'activity') handleOpenTxModal();
-                else setIsAddDebtOpen(true);
-              }}
-              className={`h-14 w-14 shrink-0 rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-transform ${
-                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
-              }`}
-              aria-label="Add"
-            >
-              <DynamicIcon name="Plus" size={24} />
-            </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (activeTab === 'wallets') setIsAddWalletOpen(true);
+                  else if (activeTab === 'activity') handleOpenTxModal();
+                  else setIsAddDebtOpen(true);
+                }}
+                className={`mx-0.5 h-12 w-12 shrink-0 rounded-2xl flex items-center justify-center active:scale-95 transition-transform ${
+                  isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+                }`}
+                aria-label="Add"
+              >
+                <DynamicIcon name="Plus" size={22} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('debts')}
+                className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all ${
+                  activeTab === 'debts'
+                    ? isDark
+                      ? 'text-zinc-50'
+                      : 'text-zinc-900'
+                    : muted
+                }`}
+              >
+                <DynamicIcon name="Users" size={20} />
+                <span className={`text-[10px] font-medium ${activeTab === 'debts' ? '' : 'opacity-80'}`}>
+                  Debts
+                </span>
+                <span
+                  className={`mt-0.5 h-0.5 w-3 rounded-full transition-opacity ${
+                    activeTab === 'debts'
+                      ? isDark
+                        ? 'bg-zinc-100 opacity-100'
+                        : 'bg-zinc-900 opacity-100'
+                      : 'opacity-0'
+                  }`}
+                />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsSettingsOpen(true)}
+                className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all ${muted}`}
+              >
+                <DynamicIcon name="Settings" size={20} />
+                <span className="text-[10px] font-medium opacity-80">More</span>
+                <span className="mt-0.5 h-0.5 w-3 rounded-full opacity-0" />
+              </button>
+            </div>
           </div>
         </div>
 
