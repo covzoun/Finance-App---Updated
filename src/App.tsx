@@ -518,18 +518,24 @@ export default function App() {
           )}
 
           {activeTab === 'activity' && (
-            <div>
+            <div className="space-y-3">
               <input
                 value={txSearchQuery}
                 onChange={(e) => setTxSearchQuery(e.target.value)}
                 placeholder="Search"
-                className={`w-full mb-3 px-4 py-3 rounded-2xl text-[14px] border outline-none ${
+                className={`w-full px-4 py-3 rounded-2xl text-[14px] border outline-none ${
                   isDark
                     ? 'bg-zinc-900 border-zinc-800 placeholder:text-zinc-600 focus:border-zinc-600'
                     : 'bg-white border-zinc-200 placeholder:text-zinc-400 focus:border-zinc-300'
                 }`}
               />
-              <div className="space-y-0.5">
+              <div
+                className={`rounded-2xl border overflow-hidden divide-y ${
+                  isDark
+                    ? 'bg-zinc-950 border-zinc-800/80 divide-zinc-800/80'
+                    : 'bg-white border-zinc-200/80 divide-zinc-100'
+                }`}
+              >
                 {displayedTransactions.slice(0, visibleTxCount).map((t) => (
                   <TransactionItem
                     key={t.id}
