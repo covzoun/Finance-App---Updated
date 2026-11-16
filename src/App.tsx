@@ -20,13 +20,12 @@ import {
 } from './lib/ledger';
 
 export default function App() {
-  // --- STATE ---
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [debts, setDebts] = useState<Debt[]>([]);
   const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'wallets' | 'activity' | 'debts'>('wallets');
-  
+
   const [lastBackupDate, setLastBackupDate] = useState<string | null>(() => {
     return localStorage.getItem('dw_last_backup') || null;
   });
@@ -35,14 +34,13 @@ export default function App() {
     return (localStorage.getItem('dw_theme') as 'light' | 'dark') || 'light';
   });
 
-  // Modals / Overlays
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
   const [isAddTxOpen, setIsAddTxOpen] = useState(false);
   const [isAddDebtOpen, setIsAddDebtOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);
-  const [visibleTxCount, setVisibleTxCount] = useState(50);
-  
+  const [visibleTxCount] = useState(50);
+
   const [hideBalances, setHideBalances] = useState<boolean>(() => {
     return localStorage.getItem('dw_hide_balances') === 'true';
   });
@@ -56,11 +54,10 @@ export default function App() {
   };
 
   const [txSearchQuery, setTxSearchQuery] = useState('');
-  const [txTypeFilter, setTxTypeFilter] = useState<'all' | 'expense' | 'income' | 'transfer' | 'recurring'>('all');
+  const [txTypeFilter] = useState<'all' | 'expense' | 'income' | 'transfer' | 'recurring'>('all');
 
   const [preselectedWalletId, setPreselectedWalletId] = useState<string | undefined>(undefined);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     if (isAddWalletOpen || isAddTxOpen || isAddDebtOpen || isSettingsOpen || selectedWalletId) {
@@ -78,12 +75,8 @@ export default function App() {
     if (savedWallets) {
       try {
         const parsed = JSON.parse(savedWallets) as Wallet[];
-        const migrated = parsed.map((w) => ({
-          ...w,
-          currency: w.currency || 'PHP',
-        }));
-        setWallets(migrated);
-      } catch (e) {
+        setWallets(parsed.map((w) => ({ ...w, currency: w.currency || 'PHP' })));
+      } catch {
         setWallets([]);
       }
     } else {
@@ -95,7 +88,7 @@ export default function App() {
     if (savedTxs) {
       try {
         setTransactions(JSON.parse(savedTxs));
-      } catch (e) {
+      } catch {
         setTransactions([]);
       }
     } else {
@@ -107,31 +100,28 @@ export default function App() {
     if (savedDebts) {
       try {
         setDebts(JSON.parse(savedDebts));
-      } catch (e) {
+      } catch {
         setDebts([]);
       }
     } else {
       setDebts([]);
       localStorage.setItem('dw_debts', JSON.stringify([]));
     }
-
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
   }, []);
 
-  const saveWallets = (updatedWallets: Wallet[]) => {
-    setWallets(updatedWallets);
-    localStorage.setItem('dw_wallets', JSON.stringify(updatedWallets));
+  const saveWallets = (updated: Wallet[]) => {
+    setWallets(updated);
+    localStorage.setItem('dw_wallets', JSON.stringify(updated));
   };
 
-  const saveTransactions = (updatedTxs: Transaction[]) => {
-    setTransactions(updatedTxs);
-    localStorage.setItem('dw_transactions', JSON.stringify(updatedTxs));
+  const saveTransactions = (updated: Transaction[]) => {
+    setTransactions(updated);
+    localStorage.setItem('dw_transactions', JSON.stringify(updated));
   };
 
-  const saveDebts = (updatedDebts: Debt[]) => {
-    setDebts(updatedDebts);
-    localStorage.setItem('dw_debts', JSON.stringify(updatedDebts));
+  const saveDebts = (updated: Debt[]) => {
+    setDebts(updated);
+    localStorage.setItem('dw_debts', JSON.stringify(updated));
   };
 
   const toggleTheme = () => {
@@ -149,10 +139,9 @@ export default function App() {
   };
 
   const totalNetWorth = calcNetWorth(wallets);
-
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
-  
+
   const getTxPHPValue = (t: Transaction) => {
     const w = wallets.find((wal) => wal.id === t.walletId);
     return toPHP(t.amount, w?.currency || 'PHP');
@@ -177,30 +166,25 @@ export default function App() {
   };
 
   const handleAddTransaction = (newTxData: Omit<Transaction, 'id'>) => {
-    const newTx: Transaction = {
-      ...newTxData,
-      id: `t-${Date.now()}`,
-    };
-    const updatedWallets = applyTransactionBalances(newTx, wallets);
-    saveWallets(updatedWallets);
+    const newTx: Transaction = { ...newTxData, id: `t-${Date.now()}` };
+    saveWallets(applyTransactionBalances(newTx, wallets));
     saveTransactions([newTx, ...transactions]);
   };
 
   const handleEditTransaction = (txId: string, updatedTxData: Omit<Transaction, 'id'>) => {
     const oldTx = transactions.find((t) => t.id === txId);
     if (!oldTx) return;
-    let updatedWallets = revertTransactionBalances(oldTx, wallets);
+    let next = revertTransactionBalances(oldTx, wallets);
     const updatedTx: Transaction = { ...updatedTxData, id: txId };
-    updatedWallets = applyTransactionBalances(updatedTx, updatedWallets);
-    saveWallets(updatedWallets);
+    next = applyTransactionBalances(updatedTx, next);
+    saveWallets(next);
     saveTransactions(transactions.map((t) => (t.id === txId ? updatedTx : t)));
   };
 
   const handleDeleteTransaction = (txId: string) => {
     const oldTx = transactions.find((t) => t.id === txId);
     if (!oldTx) return;
-    const updatedWallets = revertTransactionBalances(oldTx, wallets);
-    saveWallets(updatedWallets);
+    saveWallets(revertTransactionBalances(oldTx, wallets));
     saveTransactions(transactions.filter((t) => t.id !== txId));
   };
 
@@ -222,7 +206,7 @@ export default function App() {
       const diff = updatedBalance - currentWallet.balance;
       const adjustmentTx: Transaction = {
         id: `t-adj-${Date.now()}`,
-        walletId: walletId,
+        walletId,
         type: diff > 0 ? 'income' : 'expense',
         amount: Math.abs(Number(diff.toFixed(2))),
         category: 'Adjustment',
@@ -233,23 +217,23 @@ export default function App() {
       saveTransactions(nextTransactions);
     }
 
-    const updated = wallets.map((w) => {
-      if (w.id === walletId) {
-        return {
-          ...w,
-          name: updatedName,
-          description: updatedDesc || undefined,
-          color: updatedColor,
-          icon: updatedIcon,
-          currency: updatedCurrency,
-          type: updatedType,
-          balance: typeof updatedBalance === 'number' ? updatedBalance : w.balance,
-          image: updatedImage,
-        };
-      }
-      return w;
-    });
-    saveWallets(updated);
+    saveWallets(
+      wallets.map((w) =>
+        w.id === walletId
+          ? {
+              ...w,
+              name: updatedName,
+              description: updatedDesc || undefined,
+              color: updatedColor,
+              icon: updatedIcon,
+              currency: updatedCurrency,
+              type: updatedType,
+              balance: typeof updatedBalance === 'number' ? updatedBalance : w.balance,
+              image: updatedImage,
+            }
+          : w
+      )
+    );
   };
 
   const handleDeleteWallet = (walletId: string) => {
@@ -271,38 +255,29 @@ export default function App() {
       date: debtDate,
     };
 
-    let nextTransactions = [...transactions];
-    let nextWallets = [...wallets];
-
     if (shouldAffectWallet && newDebtData.walletId) {
-      const wallet = wallets.find((w) => w.id === newDebtData.walletId);
-      if (wallet) {
-        const isLent = newDebtData.type === 'lent';
-        const txAmount = newDebtData.amount;
-        nextWallets = wallets.map((w) => {
-          if (w.id === newDebtData.walletId) {
-            const nextBalance = isLent
-              ? Number((w.balance - txAmount).toFixed(2))
-              : Number((w.balance + txAmount).toFixed(2));
-            return { ...w, balance: nextBalance };
-          }
-          return w;
-        });
-        const ledgerTx: Transaction = {
-          id: `t-debt-${Date.now()}`,
-          walletId: newDebtData.walletId,
-          type: isLent ? 'expense' : 'income',
-          amount: txAmount,
-          category: isLent ? 'Lent' : 'Borrowed',
-          description: isLent
-            ? `Lent money to ${newDebtData.person}${newDebtData.description ? ` (${newDebtData.description})` : ''}`
-            : `Borrowed money from ${newDebtData.person}${newDebtData.description ? ` (${newDebtData.description})` : ''}`,
-          date: debtDate,
-        };
-        nextTransactions = [ledgerTx, ...nextTransactions];
-        saveTransactions(nextTransactions);
-        saveWallets(nextWallets);
-      }
+      const isLent = newDebtData.type === 'lent';
+      const txAmount = newDebtData.amount;
+      const nextWallets = wallets.map((w) => {
+        if (w.id !== newDebtData.walletId) return w;
+        const nextBalance = isLent
+          ? Number((w.balance - txAmount).toFixed(2))
+          : Number((w.balance + txAmount).toFixed(2));
+        return { ...w, balance: nextBalance };
+      });
+      const ledgerTx: Transaction = {
+        id: `t-debt-${Date.now()}`,
+        walletId: newDebtData.walletId,
+        type: isLent ? 'expense' : 'income',
+        amount: txAmount,
+        category: isLent ? 'Lent' : 'Borrowed',
+        description: isLent
+          ? `Lent money to ${newDebtData.person}${newDebtData.description ? ` (${newDebtData.description})` : ''}`
+          : `Borrowed money from ${newDebtData.person}${newDebtData.description ? ` (${newDebtData.description})` : ''}`,
+        date: debtDate,
+      };
+      saveTransactions([ledgerTx, ...transactions]);
+      saveWallets(nextWallets);
     }
     saveDebts([newDebt, ...debts]);
   };
@@ -318,43 +293,33 @@ export default function App() {
     const isLent = debt.type === 'lent';
     const nextRemaining = Number((debt.remainingAmount - amount).toFixed(2));
     const nextStatus = nextRemaining <= 0 ? 'paid' : 'partially_paid';
-    let nextTransactions = [...transactions];
-    let nextWallets = [...wallets];
 
     if (shouldAffectWallet && walletId) {
-      const wallet = wallets.find((w) => w.id === walletId);
-      if (wallet) {
-        nextWallets = wallets.map((w) => {
-          if (w.id === walletId) {
-            const nextBalance = isLent
-              ? Number((w.balance + amount).toFixed(2))
-              : Number((w.balance - amount).toFixed(2));
-            return { ...w, balance: nextBalance };
-          }
-          return w;
-        });
-        const ledgerTx: Transaction = {
-          id: `t-repay-${Date.now()}`,
-          walletId,
-          type: isLent ? 'income' : 'expense',
-          amount,
-          category: isLent ? 'Repayment' : 'Debt Payment',
-          description: isLent
-            ? `Received repayment from ${debt.person}`
-            : `Paid back ${debt.person}`,
-          date: new Date().toISOString(),
-        };
-        nextTransactions = [ledgerTx, ...nextTransactions];
-        saveTransactions(nextTransactions);
-        saveWallets(nextWallets);
-      }
+      const nextWallets = wallets.map((w) => {
+        if (w.id !== walletId) return w;
+        const nextBalance = isLent
+          ? Number((w.balance + amount).toFixed(2))
+          : Number((w.balance - amount).toFixed(2));
+        return { ...w, balance: nextBalance };
+      });
+      const ledgerTx: Transaction = {
+        id: `t-repay-${Date.now()}`,
+        walletId,
+        type: isLent ? 'income' : 'expense',
+        amount,
+        category: isLent ? 'Repayment' : 'Debt Payment',
+        description: isLent
+          ? `Received repayment from ${debt.person}`
+          : `Paid back ${debt.person}`,
+        date: new Date().toISOString(),
+      };
+      saveTransactions([ledgerTx, ...transactions]);
+      saveWallets(nextWallets);
     }
 
     saveDebts(
       debts.map((d) =>
-        d.id === debtId
-          ? { ...d, remainingAmount: nextRemaining, status: nextStatus }
-          : d
+        d.id === debtId ? { ...d, remainingAmount: nextRemaining, status: nextStatus } : d
       )
     );
   };
@@ -382,14 +347,13 @@ export default function App() {
     setIsAddTxOpen(true);
   };
 
-  const formatPHP = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
+  const formatPHP = (value: number) =>
+    new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'PHP',
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     }).format(value);
-  };
 
   const displayedTransactions = transactions.filter((t) => {
     if (txTypeFilter === 'expense' && t.type !== 'expense') return false;
@@ -412,60 +376,112 @@ export default function App() {
   const isDark = themeMode === 'dark';
 
   useEffect(() => {
-    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!metaThemeColor) {
-      metaThemeColor = document.createElement('meta');
-      metaThemeColor.setAttribute('name', 'theme-color');
-      document.head.appendChild(metaThemeColor);
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'theme-color');
+      document.head.appendChild(meta);
     }
-    metaThemeColor.setAttribute('content', isDark ? '#0a0a0a' : '#f8fafc');
+    meta.setAttribute('content', isDark ? '#09090b' : '#fafafa');
   }, [isDark]);
 
   return (
     <div className={isDark ? 'dark' : ''}>
-      <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-neutral-950 text-white' : 'bg-neutral-50 text-neutral-900'}`}>
-        <header className={`sticky top-0 z-40 border-b backdrop-blur-md ${isDark ? 'bg-neutral-950/80 border-neutral-800' : 'bg-white/80 border-neutral-200'}`}>
-          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm">F</div>
-              <div>
-                <h1 className="font-semibold tracking-tight text-base">Finances</h1>
-                <p className={`text-xs ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={toggleHideBalances} className={`p-2 rounded-lg ${isDark ? 'hover:bg-neutral-800' : 'hover:bg-neutral-100'}`} title="Toggle balances">
+      <div
+        className={`min-h-screen transition-colors duration-200 ${
+          isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'
+        }`}
+      >
+        <header
+          className={`sticky top-0 z-40 border-b backdrop-blur-xl ${
+            isDark
+              ? 'bg-zinc-950/80 border-zinc-800/80'
+              : 'bg-zinc-50/80 border-zinc-200/80'
+          }`}
+        >
+          <div className="max-w-lg mx-auto px-5 h-14 flex items-center justify-between">
+            <h1 className="text-[15px] font-semibold tracking-tight">Finances</h1>
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={toggleHideBalances}
+                className={`p-2 rounded-lg transition-colors ${
+                  isDark ? 'hover:bg-zinc-800 text-zinc-400' : 'hover:bg-zinc-200/60 text-zinc-500'
+                }`}
+                title="Hide balances"
+              >
                 <DynamicIcon name={hideBalances ? 'EyeOff' : 'Eye'} size={18} />
               </button>
-              <button onClick={() => setShowAnalyticsPanel(true)} className={`p-2 rounded-lg ${isDark ? 'hover:bg-neutral-800' : 'hover:bg-neutral-100'}`} title="Insights">
+              <button
+                onClick={() => setShowAnalyticsPanel(true)}
+                className={`p-2 rounded-lg transition-colors ${
+                  isDark ? 'hover:bg-zinc-800 text-zinc-400' : 'hover:bg-zinc-200/60 text-zinc-500'
+                }`}
+                title="Insights"
+              >
                 <DynamicIcon name="BarChart3" size={18} />
               </button>
-              <button onClick={() => setIsSettingsOpen(true)} className={`p-2 rounded-lg ${isDark ? 'hover:bg-neutral-800' : 'hover:bg-neutral-100'}`} title="Settings">
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className={`p-2 rounded-lg transition-colors ${
+                  isDark ? 'hover:bg-zinc-800 text-zinc-400' : 'hover:bg-zinc-200/60 text-zinc-500'
+                }`}
+                title="Settings"
+              >
                 <DynamicIcon name="Settings" size={18} />
               </button>
             </div>
           </div>
         </header>
 
-        <main className="max-w-5xl mx-auto px-4 py-6 pb-28">
-          <section className="mb-6">
-            <p className={`text-xs font-medium uppercase tracking-wider mb-1 ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>Net Worth</p>
-            <p className="text-3xl font-bold tracking-tight">{hideBalances ? '••••••' : formatPHP(totalNetWorth)}</p>
-            <div className="flex gap-4 mt-2 text-sm">
-              <span className="text-emerald-500">+{hideBalances ? '•••' : formatPHP(monthlyIncome)} this month</span>
-              <span className="text-rose-500">-{hideBalances ? '•••' : formatPHP(monthlyExpenses)} spent</span>
+        <main className="max-w-lg mx-auto px-5 pt-8 pb-28">
+          <section className="mb-8">
+            <p
+              className={`text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5 ${
+                isDark ? 'text-zinc-500' : 'text-zinc-400'
+              }`}
+            >
+              Net worth
+            </p>
+            <p className="tabular text-[2rem] font-semibold tracking-tight leading-none">
+              {hideBalances ? '••••••' : formatPHP(totalNetWorth)}
+            </p>
+            <div
+              className={`flex gap-4 mt-3 text-[12px] ${
+                isDark ? 'text-zinc-500' : 'text-zinc-400'
+              }`}
+            >
+              <span>
+                <span className={isDark ? 'text-emerald-400' : 'text-emerald-600'}>
+                  {hideBalances ? '•••' : `+${formatPHP(monthlyIncome)}`}
+                </span>{' '}
+                in
+              </span>
+              <span>
+                <span className={isDark ? 'text-rose-400' : 'text-rose-500'}>
+                  {hideBalances ? '•••' : `−${formatPHP(monthlyExpenses)}`}
+                </span>{' '}
+                out
+              </span>
             </div>
           </section>
 
-          <div className={`flex gap-1 p-1 rounded-xl mb-5 ${isDark ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
+          <div
+            className={`flex p-0.5 rounded-xl mb-5 ${
+              isDark ? 'bg-zinc-900' : 'bg-zinc-200/70'
+            }`}
+          >
             {(['wallets', 'activity', 'debts'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-2 text-sm font-medium rounded-lg capitalize transition-colors ${
+                className={`flex-1 py-1.5 text-[12px] font-medium rounded-[10px] capitalize transition-all ${
                   activeTab === tab
-                    ? isDark ? 'bg-neutral-800 text-white' : 'bg-white text-neutral-900 shadow-sm'
-                    : isDark ? 'text-neutral-400' : 'text-neutral-500'
+                    ? isDark
+                      ? 'bg-zinc-800 text-zinc-50 shadow-sm'
+                      : 'bg-white text-zinc-900 shadow-sm'
+                    : isDark
+                      ? 'text-zinc-500'
+                      : 'text-zinc-500'
                 }`}
               >
                 {tab}
@@ -474,11 +490,22 @@ export default function App() {
           </div>
 
           {activeTab === 'wallets' && (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {wallets.length === 0 ? (
-                <div className={`text-center py-16 rounded-2xl border border-dashed ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-200 text-neutral-400'}`}>
-                  <p className="mb-3">No wallets yet</p>
-                  <button onClick={() => setIsAddWalletOpen(true)} className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium">Add wallet</button>
+                <div
+                  className={`text-center py-20 rounded-2xl border border-dashed ${
+                    isDark ? 'border-zinc-800 text-zinc-500' : 'border-zinc-200 text-zinc-400'
+                  }`}
+                >
+                  <p className="text-[13px] mb-4">No wallets yet</p>
+                  <button
+                    onClick={() => setIsAddWalletOpen(true)}
+                    className={`px-4 py-2 rounded-full text-[12px] font-medium ${
+                      isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+                    }`}
+                  >
+                    Add wallet
+                  </button>
                 </div>
               ) : (
                 wallets.map((w) => (
@@ -495,15 +522,17 @@ export default function App() {
           )}
 
           {activeTab === 'activity' && (
-            <div className="space-y-2">
-              <div className="flex gap-2 mb-3">
-                <input
-                  value={txSearchQuery}
-                  onChange={(e) => setTxSearchQuery(e.target.value)}
-                  placeholder="Search transactions..."
-                  className={`flex-1 px-3 py-2 rounded-lg text-sm border ${isDark ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-neutral-200'}`}
-                />
-              </div>
+            <div className="space-y-1">
+              <input
+                value={txSearchQuery}
+                onChange={(e) => setTxSearchQuery(e.target.value)}
+                placeholder="Search"
+                className={`w-full mb-3 px-3.5 py-2.5 rounded-xl text-[13px] border outline-none transition-colors ${
+                  isDark
+                    ? 'bg-zinc-900 border-zinc-800 placeholder:text-zinc-600 focus:border-zinc-600'
+                    : 'bg-white border-zinc-200 placeholder:text-zinc-400 focus:border-zinc-300'
+                }`}
+              />
               {displayedTransactions.slice(0, visibleTxCount).map((t) => (
                 <TransactionItem
                   key={t.id}
@@ -514,7 +543,13 @@ export default function App() {
                 />
               ))}
               {displayedTransactions.length === 0 && (
-                <p className={`text-center py-12 text-sm ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>No transactions</p>
+                <p
+                  className={`text-center py-16 text-[13px] ${
+                    isDark ? 'text-zinc-600' : 'text-zinc-400'
+                  }`}
+                >
+                  No transactions
+                </p>
               )}
             </div>
           )}
@@ -532,28 +567,35 @@ export default function App() {
           )}
         </main>
 
-        <div className="fixed bottom-6 right-6 flex flex-col gap-2 z-30">
-          {activeTab === 'wallets' && (
-            <button onClick={() => setIsAddWalletOpen(true)} className="w-14 h-14 rounded-full bg-emerald-600 text-white shadow-lg flex items-center justify-center">
-              <DynamicIcon name="Plus" size={24} />
+        <div className="fixed bottom-6 inset-x-0 z-30 pointer-events-none">
+          <div className="max-w-lg mx-auto px-5 flex justify-end pointer-events-auto">
+            <button
+              onClick={() => {
+                if (activeTab === 'wallets') setIsAddWalletOpen(true);
+                else if (activeTab === 'activity') handleOpenTxModal();
+                else setIsAddDebtOpen(true);
+              }}
+              className={`h-12 w-12 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95 ${
+                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+              }`}
+            >
+              <DynamicIcon name="Plus" size={22} />
             </button>
-          )}
-          {activeTab === 'activity' && (
-            <button onClick={() => handleOpenTxModal()} className="w-14 h-14 rounded-full bg-emerald-600 text-white shadow-lg flex items-center justify-center">
-              <DynamicIcon name="Plus" size={24} />
-            </button>
-          )}
-          {activeTab === 'debts' && (
-            <button onClick={() => setIsAddDebtOpen(true)} className="w-14 h-14 rounded-full bg-emerald-600 text-white shadow-lg flex items-center justify-center">
-              <DynamicIcon name="Plus" size={24} />
-            </button>
-          )}
+          </div>
         </div>
 
-        <AddWalletModal isOpen={isAddWalletOpen} onClose={() => setIsAddWalletOpen(false)} onAdd={handleAddWallet} themeMode={themeMode} />
+        <AddWalletModal
+          isOpen={isAddWalletOpen}
+          onClose={() => setIsAddWalletOpen(false)}
+          onAdd={handleAddWallet}
+          themeMode={themeMode}
+        />
         <AddTransactionModal
           isOpen={isAddTxOpen}
-          onClose={() => { setIsAddTxOpen(false); setEditingTransaction(null); }}
+          onClose={() => {
+            setIsAddTxOpen(false);
+            setEditingTransaction(null);
+          }}
           wallets={wallets}
           onAdd={handleAddTransaction}
           onEdit={handleEditTransaction}
@@ -562,7 +604,13 @@ export default function App() {
           editingTransaction={editingTransaction}
           themeMode={themeMode}
         />
-        <AddCreditModal isOpen={isAddDebtOpen} onClose={() => setIsAddDebtOpen(false)} wallets={wallets} onAdd={handleAddDebt} themeMode={themeMode} />
+        <AddCreditModal
+          isOpen={isAddDebtOpen}
+          onClose={() => setIsAddDebtOpen(false)}
+          wallets={wallets}
+          onAdd={handleAddDebt}
+          themeMode={themeMode}
+        />
         <SettingsModal
           lastBackupDate={lastBackupDate}
           onBackupComplete={() => setLastBackupDate(new Date().toISOString())}
@@ -578,19 +626,35 @@ export default function App() {
         <AnimatePresence>
           {showAnalyticsPanel && (
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              className={`fixed inset-0 z-50 flex flex-col ${isDark ? 'bg-neutral-950' : 'bg-white'}`}
+              exit={{ opacity: 0, y: 24 }}
+              transition={{ duration: 0.2 }}
+              className={`fixed inset-0 z-50 flex flex-col ${
+                isDark ? 'bg-zinc-950' : 'bg-white'
+              }`}
             >
-              <div className={`flex items-center gap-3 p-4 border-b ${isDark ? 'border-neutral-800' : 'border-neutral-200'}`}>
-                <button onClick={() => setShowAnalyticsPanel(false)} className={`p-2 rounded-lg ${isDark ? 'hover:bg-neutral-800' : 'hover:bg-neutral-100'}`}>
-                  <DynamicIcon name="X" size={20} />
+              <div
+                className={`flex items-center gap-2 px-4 h-14 border-b ${
+                  isDark ? 'border-zinc-800' : 'border-zinc-200'
+                }`}
+              >
+                <button
+                  onClick={() => setShowAnalyticsPanel(false)}
+                  className={`p-2 rounded-lg ${
+                    isDark ? 'hover:bg-zinc-800' : 'hover:bg-zinc-100'
+                  }`}
+                >
+                  <DynamicIcon name="X" size={18} />
                 </button>
-                <h2 className="font-semibold">Insights</h2>
+                <h2 className="text-[14px] font-semibold">Insights</h2>
               </div>
-              <div className="flex-1 overflow-y-auto p-4">
-                <OverviewCharts wallets={wallets} transactions={transactions} themeMode={themeMode} />
+              <div className="flex-1 overflow-y-auto p-5">
+                <OverviewCharts
+                  wallets={wallets}
+                  transactions={transactions}
+                  themeMode={themeMode}
+                />
               </div>
             </motion.div>
           )}
@@ -599,7 +663,11 @@ export default function App() {
         {selectedWallet && (
           <WalletDetails
             wallet={selectedWallet}
-            transactions={transactions.filter((t) => t.walletId === selectedWallet.id || t.toWalletId === selectedWallet.id)}
+            transactions={transactions.filter(
+              (t) =>
+                t.walletId === selectedWallet.id ||
+                t.toWalletId === selectedWallet.id
+            )}
             wallets={wallets}
             onBack={() => setSelectedWalletId(null)}
             onEditWallet={handleEditWallet}
