@@ -401,7 +401,18 @@ export default function App() {
   return (
     <div className={isDark ? 'dark' : ''}>
       <div className={`min-h-screen ${isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'}`}>
-        <section className="max-w-md mx-auto px-6 pt-14 pb-8">
+        <section className="max-w-md mx-auto px-6 pt-14 pb-8 relative">
+          <button
+            type="button"
+            onClick={() => setShowAnalyticsPanel(true)}
+            className={`absolute top-12 right-4 p-2.5 rounded-full transition-colors z-10 ${
+              isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200/70 text-zinc-500'
+            }`}
+            aria-label="Insights"
+          >
+            <DynamicIcon name="BarChart3" size={18} />
+          </button>
+
           <div className="text-center">
             <p className={`text-[11px] font-medium tracking-[0.14em] uppercase ${muted}`}>
               Net worth
@@ -606,7 +617,6 @@ export default function App() {
           onResetApp={handleResetApp}
           hideBalances={hideBalances}
           onToggleHideBalances={toggleHideBalances}
-          onOpenInsights={() => setShowAnalyticsPanel(true)}
         />
 
         <AnimatePresence>
