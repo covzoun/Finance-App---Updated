@@ -11,7 +11,6 @@ interface SettingsModalProps {
   onBackupComplete: () => void;
   hideBalances?: boolean;
   onToggleHideBalances?: () => void;
-  onOpenInsights?: () => void;
 }
 
 export default function SettingsModal({
@@ -24,7 +23,6 @@ export default function SettingsModal({
   onBackupComplete,
   hideBalances,
   onToggleHideBalances,
-  onOpenInsights,
 }: SettingsModalProps) {
   const isDark = themeMode === 'dark';
   const [showConfirmReset, setShowConfirmReset] = useState(false);
@@ -303,29 +301,6 @@ export default function SettingsModal({
               )}
             </div>
           </div>
-
-          {onOpenInsights && (
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onOpenInsights();
-              }}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border text-left ${
-                isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-zinc-200'
-              }`}
-            >
-              <span className="flex items-center gap-3 text-[13px] font-medium">
-                <DynamicIcon name="BarChart3" size={18} />
-                Insights
-              </span>
-              <DynamicIcon
-                name="ChevronRight"
-                size={16}
-                className={isDark ? 'text-zinc-600' : 'text-zinc-400'}
-              />
-            </button>
-          )}
 
           <div className="space-y-3">
             <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-rose-500">
