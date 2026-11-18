@@ -113,8 +113,7 @@ export default function TransactionItem({
         </p>
       </div>
 
-      <p className={`tabular text-[14px] font-semibold shrink-0 ${amountColor}`}
-      >
+      <p className={`tabular text-[14px] font-semibold shrink-0 ${amountColor}`}>
         {prefix}
         {formatCurrency(transaction.amount, wallet?.currency || 'PHP')}
       </p>
