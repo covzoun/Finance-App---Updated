@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Segoe UI", system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 @layer base {
@@ -21,9 +21,9 @@
 
   body {
     font-family: var(--font-sans);
-    background: #fafafa;
-    color: #18181b;
-    letter-spacing: -0.015em;
+    background: #f2f2f7;
+    color: #1c1c1e;
+    letter-spacing: -0.011em;
   }
 
   * {
@@ -49,7 +49,84 @@
 
   .tabular {
     font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum", "ss01";
+    font-feature-settings: "tnum";
+  }
+
+  /* Liquid glass surfaces */
+  .glass {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: saturate(180%) blur(28px);
+    -webkit-backdrop-filter: saturate(180%) blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.65) inset,
+      0 8px 32px rgba(15, 23, 42, 0.06);
+  }
+
+  .glass-dark {
+    background: rgba(28, 28, 30, 0.62);
+    backdrop-filter: saturate(180%) blur(28px);
+    -webkit-backdrop-filter: saturate(180%) blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 12px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .glass-sheet {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: saturate(180%) blur(40px);
+    -webkit-backdrop-filter: saturate(180%) blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 24px 80px rgba(15, 23, 42, 0.14);
+  }
+
+  .glass-sheet-dark {
+    background: rgba(28, 28, 30, 0.82);
+    backdrop-filter: saturate(180%) blur(40px);
+    -webkit-backdrop-filter: saturate(180%) blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.05) inset,
+      0 24px 80px rgba(0, 0, 0, 0.55);
+  }
+
+  .glass-dock {
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: saturate(180%) blur(32px);
+    -webkit-backdrop-filter: saturate(180%) blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 10px 40px rgba(15, 23, 42, 0.1);
+  }
+
+  .glass-dock-dark {
+    background: rgba(44, 44, 46, 0.72);
+    backdrop-filter: saturate(180%) blur(32px);
+    -webkit-backdrop-filter: saturate(180%) blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 14px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .app-bg {
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(120, 160, 255, 0.18), transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, rgba(200, 160, 255, 0.14), transparent 50%),
+      radial-gradient(800px 500px at 50% 100%, rgba(120, 220, 200, 0.1), transparent 55%),
+      #f2f2f7;
+  }
+
+  .app-bg-dark {
+    background:
+      radial-gradient(1000px 500px at 0% 0%, rgba(80, 120, 255, 0.16), transparent 50%),
+      radial-gradient(800px 500px at 100% 0%, rgba(160, 100, 255, 0.12), transparent 50%),
+      radial-gradient(700px 400px at 50% 100%, rgba(40, 120, 110, 0.1), transparent 55%),
+      #000000;
   }
 }
 
