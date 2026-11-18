@@ -130,36 +130,36 @@ export default function AddTransactionModal({
     onClose();
   };
 
-  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ${
+  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-black/20 ${
     isDark
-      ? 'bg-zinc-950 border-zinc-800 text-white'
-      : 'bg-zinc-50 border-zinc-200 text-zinc-900'
+      ? 'bg-white/8 border-white/10 text-white'
+      : 'bg-black/[0.03] border-black/8 text-[#1c1c1e]'
   }`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/30 p-0 sm:p-4 backdrop-blur-md">
       <div className="absolute inset-0" onClick={onClose} />
 
       <div
         className={`relative w-full sm:max-w-md border-t sm:border rounded-t-[28px] sm:rounded-[28px] shadow-2xl overflow-hidden max-h-[92vh] flex flex-col ${
           isDark
-            ? 'bg-zinc-950 border-zinc-800 text-zinc-50'
-            : 'bg-white border-zinc-200 text-zinc-900'
+            ? 'glass-sheet-dark text-white'
+            : 'glass-sheet text-[#1c1c1e]'
         }`}
       >
         <div
           className={`flex items-center justify-between border-b px-5 py-4 shrink-0 ${
-            isDark ? 'border-zinc-800' : 'border-zinc-100'
+            isDark ? 'border-white/10' : 'border-black/6'
           }`}
         >
-          <h2 className="text-[14px] font-semibold tracking-tight">
+          <h2 className="text-[15px] font-semibold tracking-tight">
             {editingTransaction ? 'Edit transaction' : 'New transaction'}
           </h2>
           <button
             type="button"
             onClick={onClose}
             className={`rounded-full p-1.5 ${
-              isDark ? 'text-zinc-400 hover:bg-zinc-900' : 'text-zinc-400 hover:bg-zinc-100'
+              isDark ? 'text-white/45 hover:bg-white/10' : 'text-black/35 hover:bg-black/5'
             }`}
           >
             <DynamicIcon name="X" size={16} />
@@ -170,7 +170,7 @@ export default function AddTransactionModal({
           onSubmit={handleSubmit}
           className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 space-y-4"
         >
-          <div className={`flex p-0.5 rounded-xl ${isDark ? 'bg-zinc-900' : 'bg-zinc-100'}`}>
+          <div className={`flex p-0.5 rounded-xl ${isDark ? 'bg-white/8' : 'bg-black/[0.04]'}`}>
             {(['expense', 'income', 'transfer'] as TransactionType[]).map((t) => (
               <button
                 key={t}
@@ -179,9 +179,11 @@ export default function AddTransactionModal({
                 className={`flex-1 py-2 text-[12px] font-medium rounded-[10px] capitalize transition-all ${
                   type === t
                     ? isDark
-                      ? 'bg-zinc-800 text-zinc-50 shadow-sm'
-                      : 'bg-white text-zinc-900 shadow-sm'
-                    : 'text-zinc-500'
+                      ? 'bg-white/15 text-white shadow-sm'
+                      : 'bg-white text-[#1c1c1e] shadow-sm'
+                    : isDark
+                      ? 'text-white/40'
+                      : 'text-black/40'
                 }`}
               >
                 {t}
@@ -190,14 +192,10 @@ export default function AddTransactionModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               {type === 'transfer' ? 'From' : 'Wallet'}
             </label>
-            <select
-              value={walletId}
-              onChange={(e) => setWalletId(e.target.value)}
-              className={field}
-            >
+            <select value={walletId} onChange={(e) => setWalletId(e.target.value)} className={field}>
               {wallets.map((w) => (
                 <option key={w.id} value={w.id}>
                   {w.name} ({w.currency})
@@ -208,14 +206,10 @@ export default function AddTransactionModal({
 
           {type === 'transfer' && (
             <div>
-              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 To
               </label>
-              <select
-                value={toWalletId}
-                onChange={(e) => setToWalletId(e.target.value)}
-                className={field}
-              >
+              <select value={toWalletId} onChange={(e) => setToWalletId(e.target.value)} className={field}>
                 <option value="" disabled>
                   Select destination
                 </option>
@@ -231,11 +225,11 @@ export default function AddTransactionModal({
           )}
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Amount ({currencyCode})
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-2.5 text-[13px] text-zinc-400">
+              <span className={`absolute left-3.5 top-2.5 text-[13px] ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 {currencySymbol}
               </span>
               <input
@@ -251,7 +245,7 @@ export default function AddTransactionModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Category
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -265,11 +259,11 @@ export default function AddTransactionModal({
                     className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition-all ${
                       active
                         ? isDark
-                          ? 'bg-zinc-100 text-zinc-900'
-                          : 'bg-zinc-900 text-white'
+                          ? 'bg-white text-black'
+                          : 'bg-[#1c1c1e] text-white'
                         : isDark
-                          ? 'bg-zinc-900 text-zinc-400'
-                          : 'bg-zinc-100 text-zinc-500'
+                          ? 'bg-white/8 text-white/40'
+                          : 'bg-black/[0.04] text-black/40'
                     }`}
                   >
                     {cat.name}
@@ -280,7 +274,7 @@ export default function AddTransactionModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Note
             </label>
             <input
@@ -293,19 +287,14 @@ export default function AddTransactionModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Date
             </label>
-            <input
-              type="datetime-local"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className={field}
-            />
+            <input type="datetime-local" value={date} onChange={(e) => setDate(e.target.value)} className={field} />
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Repeat
             </label>
             <select
@@ -329,7 +318,7 @@ export default function AddTransactionModal({
 
           {isRecurring === 'custom' && (
             <div>
-              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 Every N days
               </label>
               <input
@@ -361,15 +350,15 @@ export default function AddTransactionModal({
               type="button"
               onClick={onClose}
               className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium border ${
-                isDark ? 'border-zinc-700 text-zinc-300' : 'border-zinc-200 text-zinc-600'
+                isDark ? 'border-white/15 text-white/80' : 'border-black/10 text-black/60'
               }`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium ${
-                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+              className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold ${
+                isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white'
               }`}
             >
               {editingTransaction ? 'Save' : 'Add'}
