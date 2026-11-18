@@ -105,39 +105,39 @@ export default function AddWalletModal({
     onClose();
   };
 
-  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ${
-    isDark ? 'bg-zinc-950 border-zinc-800 text-white' : 'bg-zinc-50 border-zinc-200 text-zinc-900'
+  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-black/20 ${
+    isDark ? 'bg-white/8 border-white/10 text-white' : 'bg-black/[0.03] border-black/8 text-[#1c1c1e]'
   }`;
 
   const chip = (active: boolean) =>
     `py-2 px-2 rounded-xl text-[12px] font-medium border transition-all capitalize ${
       active
         ? isDark
-          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
-          : 'bg-zinc-900 text-white border-zinc-900'
+          ? 'bg-white text-black border-white'
+          : 'bg-[#1c1c1e] text-white border-[#1c1c1e]'
         : isDark
-          ? 'bg-zinc-950 text-zinc-400 border-zinc-800'
-          : 'bg-zinc-50 text-zinc-500 border-zinc-200'
+          ? 'bg-white/5 text-white/40 border-white/10'
+          : 'bg-black/[0.03] text-black/40 border-black/8'
     }`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/30 p-0 sm:p-4 backdrop-blur-md">
       <div className="absolute inset-0" onClick={onClose} />
 
       <div
         className={`relative w-full sm:max-w-md border-t sm:border rounded-t-[28px] sm:rounded-[28px] shadow-2xl overflow-hidden max-h-[92vh] flex flex-col ${
-          isDark ? 'bg-zinc-950 border-zinc-800 text-zinc-50' : 'bg-white border-zinc-200 text-zinc-900'
+          isDark ? 'glass-sheet-dark text-white' : 'glass-sheet text-[#1c1c1e]'
         }`}
       >
         <div className={`flex items-center justify-between border-b px-5 py-4 shrink-0 ${
-          isDark ? 'border-zinc-800' : 'border-zinc-100'
+          isDark ? 'border-white/10' : 'border-black/6'
         }`}>
-          <h2 className="text-[14px] font-semibold tracking-tight">New wallet</h2>
+          <h2 className="text-[15px] font-semibold tracking-tight">New wallet</h2>
           <button
             type="button"
             onClick={onClose}
             className={`rounded-full p-1.5 ${
-              isDark ? 'text-zinc-400 hover:bg-zinc-900' : 'text-zinc-400 hover:bg-zinc-100'
+              isDark ? 'text-white/45 hover:bg-white/10' : 'text-black/35 hover:bg-black/5'
             }`}
           >
             <DynamicIcon name="X" size={16} />
@@ -146,7 +146,7 @@ export default function AddWalletModal({
 
         <form onSubmit={handleSubmit} className="overflow-y-auto overscroll-contain px-5 py-5 flex-1 space-y-4">
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Opening balance
             </label>
             <input
@@ -160,7 +160,7 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Template
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -173,7 +173,7 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Type
             </label>
             <div className="grid grid-cols-4 gap-1.5">
@@ -186,7 +186,7 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Currency
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -199,7 +199,7 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Name
             </label>
             <input
@@ -213,7 +213,7 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Note
             </label>
             <input
@@ -226,7 +226,7 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Color
             </label>
             <div className="flex flex-wrap gap-2">
@@ -235,7 +235,7 @@ export default function AddWalletModal({
                   key={color.value}
                   type="button"
                   onClick={() => setSelectedColor(color.value)}
-                  className={`h-7 w-7 rounded-full ${selectedColor === color.value ? 'ring-2 ring-offset-2 ring-zinc-400' : ''}`}
+                  className={`h-7 w-7 rounded-full ${selectedColor === color.value ? 'ring-2 ring-offset-2 ring-black/20' : ''}`}
                   style={{ backgroundColor: color.hex }}
                   title={color.name}
                 />
@@ -244,10 +244,10 @@ export default function AddWalletModal({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Visual
             </label>
-            <div className={`flex p-0.5 rounded-xl mb-3 ${isDark ? 'bg-zinc-900' : 'bg-zinc-100'}`}>
+            <div className={`flex p-0.5 rounded-xl mb-3 ${isDark ? 'bg-white/8' : 'bg-black/[0.04]'}`}>
               {(['bank', 'icon', 'image'] as const).map((mode) => (
                 <button
                   key={mode}
@@ -256,9 +256,11 @@ export default function AddWalletModal({
                   className={`flex-1 py-1.5 rounded-[10px] text-[12px] font-medium capitalize ${
                     avatarMode === mode
                       ? isDark
-                        ? 'bg-zinc-800 text-zinc-50'
-                        : 'bg-white text-zinc-900 shadow-sm'
-                      : 'text-zinc-500'
+                        ? 'bg-white/15 text-white'
+                        : 'bg-white text-[#1c1c1e] shadow-sm'
+                      : isDark
+                        ? 'text-white/40'
+                        : 'text-black/40'
                   }`}
                 >
                   {mode === 'bank' ? 'PH banks' : mode}
@@ -278,10 +280,10 @@ export default function AddWalletModal({
                     }}
                     className={`h-10 rounded-xl flex items-center justify-center border ${
                       selectedIcon === 'bank:' + preset.id
-                        ? 'border-zinc-400'
+                        ? 'border-black/20'
                         : isDark
-                          ? 'border-zinc-800'
-                          : 'border-zinc-200'
+                          ? 'border-white/10'
+                          : 'border-black/8'
                     }`}
                     style={{
                       backgroundColor:
@@ -331,15 +333,15 @@ export default function AddWalletModal({
               type="button"
               onClick={onClose}
               className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium border ${
-                isDark ? 'border-zinc-700 text-zinc-300' : 'border-zinc-200 text-zinc-600'
+                isDark ? 'border-white/15 text-white/80' : 'border-black/10 text-black/60'
               }`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium ${
-                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+              className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold ${
+                isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white'
               }`}
             >
               Add wallet
