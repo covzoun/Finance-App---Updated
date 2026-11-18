@@ -63,8 +63,8 @@ export default function TransactionItem({
           ? 'text-rose-400'
           : 'text-rose-500'
         : isDark
-          ? 'text-zinc-300'
-          : 'text-zinc-700';
+          ? 'text-white/80'
+          : 'text-[#1c1c1e]';
 
   const prefix =
     transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '−' : '';
@@ -78,13 +78,13 @@ export default function TransactionItem({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-left transition-colors ${
-        isDark ? 'hover:bg-zinc-900/80' : 'hover:bg-white'
+      className={`w-full flex items-center gap-3 px-3.5 py-3 text-left transition-colors ${
+        isDark ? 'hover:bg-white/[0.04]' : 'hover:bg-black/[0.03]'
       }`}
     >
       <div
-        className={`h-10 w-10 shrink-0 rounded-xl flex items-center justify-center ${
-          isDark ? 'bg-zinc-900 text-zinc-400' : 'bg-zinc-100 text-zinc-500'
+        className={`h-10 w-10 shrink-0 rounded-2xl flex items-center justify-center ${
+          isDark ? 'bg-white/[0.06] text-white/45' : 'bg-black/[0.04] text-black/35'
         }`}
       >
         <DynamicIcon name={categoryIcon(transaction.category)} size={16} />
@@ -93,8 +93,8 @@ export default function TransactionItem({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <p
-            className={`text-[13px] font-medium tracking-tight truncate ${
-              isDark ? 'text-zinc-100' : 'text-zinc-900'
+            className={`text-[14px] font-medium tracking-[-0.01em] truncate ${
+              isDark ? 'text-white' : 'text-[#1c1c1e]'
             }`}
           >
             {transaction.description || transaction.category || 'Transaction'}
@@ -103,17 +103,18 @@ export default function TransactionItem({
             <DynamicIcon
               name="RefreshCw"
               size={11}
-              className={isDark ? 'text-zinc-500' : 'text-zinc-400'}
+              className={isDark ? 'text-white/30' : 'text-black/25'}
             />
           )}
         </div>
-        <p className={`text-[11px] mt-0.5 truncate ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+        <p className={`text-[12px] mt-0.5 truncate ${isDark ? 'text-white/35' : 'text-black/35'}`}>
           {formatDate(transaction.date)}
           {subtitle ? ` · ${subtitle}` : ''}
         </p>
       </div>
 
-      <p className={`tabular text-[13px] font-semibold shrink-0 ${amountColor}`}>
+      <p className={`tabular text-[14px] font-semibold shrink-0 ${amountColor}`}
+      >
         {prefix}
         {formatCurrency(transaction.amount, wallet?.currency || 'PHP')}
       </p>
