@@ -88,26 +88,26 @@ export default function SettingsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/30 p-0 sm:p-4 backdrop-blur-md">
       <div className="absolute inset-0" onClick={onClose} />
 
       <div
         className={`relative w-full sm:max-w-md border-t sm:border rounded-t-[28px] sm:rounded-[28px] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col ${
           isDark
-            ? 'bg-zinc-950 border-zinc-800 text-zinc-50'
-            : 'bg-white border-zinc-200 text-zinc-900'
+            ? 'glass-sheet-dark text-white'
+            : 'glass-sheet text-[#1c1c1e]'
         }`}
       >
         <div
           className={`flex items-center justify-between border-b px-5 py-4 shrink-0 ${
-            isDark ? 'border-zinc-800' : 'border-zinc-100'
+            isDark ? 'border-white/10' : 'border-black/6'
           }`}
         >
-          <h2 className="text-[14px] font-semibold tracking-tight">Settings</h2>
+          <h2 className="text-[15px] font-semibold tracking-tight">Settings</h2>
           <button
             onClick={onClose}
             className={`rounded-full p-1.5 ${
-              isDark ? 'hover:bg-zinc-800 text-zinc-400' : 'hover:bg-zinc-100 text-zinc-500'
+              isDark ? 'hover:bg-white/10 text-white/50' : 'hover:bg-black/5 text-black/40'
             }`}
           >
             <DynamicIcon name="X" size={16} />
@@ -117,7 +117,7 @@ export default function SettingsModal({
         <div className="overflow-y-auto overscroll-contain px-5 py-5 space-y-6">
           {statusMessage && (
             <div
-              className={`p-3 rounded-xl text-[12px] font-medium flex items-center justify-between border ${
+              className={`p-3 rounded-2xl text-[12px] font-medium flex items-center justify-between border ${
                 statusMessage.type === 'success'
                   ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                   : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
@@ -131,25 +131,25 @@ export default function SettingsModal({
           )}
 
           <div className="space-y-3">
-            <h3 className={`text-[11px] font-medium uppercase tracking-[0.12em] ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+            <h3 className={`text-[11px] font-semibold uppercase tracking-[0.12em] ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Appearance
             </h3>
             <div
               className={`p-1 rounded-2xl border flex ${
-                isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-zinc-100 border-zinc-200'
+                isDark ? 'bg-white/8 border-white/10' : 'bg-black/[0.04] border-black/6'
               }`}
             >
               <button
                 type="button"
                 onClick={() => themeMode === 'dark' && onToggleTheme()}
-                className={`flex-1 py-2.5 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-1.5 ${
                   themeMode === 'light'
                     ? isDark
-                      ? 'bg-zinc-800 text-zinc-50'
-                      : 'bg-white text-zinc-900 shadow-sm'
+                      ? 'bg-white/15 text-white'
+                      : 'bg-white text-[#1c1c1e] shadow-sm'
                     : isDark
-                      ? 'text-zinc-500'
-                      : 'text-zinc-500'
+                      ? 'text-white/40'
+                      : 'text-black/40'
                 }`}
               >
                 <DynamicIcon name="Sun" size={14} />
@@ -158,8 +158,8 @@ export default function SettingsModal({
               <button
                 type="button"
                 onClick={() => themeMode === 'light' && onToggleTheme()}
-                className={`flex-1 py-2.5 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 ${
-                  themeMode === 'dark' ? 'bg-zinc-800 text-zinc-50' : 'text-zinc-500'
+                className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-1.5 ${
+                  themeMode === 'dark' ? 'bg-white/15 text-white' : 'text-black/40'
                 }`}
               >
                 <DynamicIcon name="Moon" size={14} />
@@ -170,12 +170,12 @@ export default function SettingsModal({
             {onToggleHideBalances && (
               <div
                 className={`p-3.5 rounded-2xl border flex items-center justify-between ${
-                  isDark ? 'bg-zinc-900/50 border-zinc-800' : 'bg-zinc-50 border-zinc-200'
+                  isDark ? 'bg-white/[0.05] border-white/10' : 'bg-black/[0.03] border-black/6'
                 }`}
               >
                 <div>
-                  <p className="text-[13px] font-medium">Hide balances</p>
-                  <p className={`text-[11px] ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                  <p className="text-[14px] font-medium">Hide balances</p>
+                  <p className={`text-[12px] ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                     Mask amounts with ••••••
                   </p>
                 </div>
@@ -186,19 +186,19 @@ export default function SettingsModal({
                     onChange={onToggleHideBalances}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-zinc-300 dark:bg-zinc-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-zinc-900 dark:peer-checked:bg-zinc-100" />
+                  <div className="w-9 h-5 bg-black/15 dark:bg-white/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#1c1c1e] dark:peer-checked:bg-white" />
                 </label>
               </div>
             )}
           </div>
 
           <div className="space-y-3">
-            <h3 className={`text-[11px] font-medium uppercase tracking-[0.12em] ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+            <h3 className={`text-[11px] font-semibold uppercase tracking-[0.12em] ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Data
             </h3>
             <div
               className={`p-4 rounded-2xl border space-y-3 ${
-                isDark ? 'border-zinc-800' : 'border-zinc-200'
+                isDark ? 'border-white/10' : 'border-black/8'
               }`}
             >
               <div className="grid grid-cols-2 gap-2">
@@ -224,8 +224,8 @@ export default function SettingsModal({
                     onBackupComplete();
                     setStatusMessage({ text: 'Backup downloaded.', type: 'success' });
                   }}
-                  className={`py-2.5 px-3 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 ${
-                    isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+                  className={`py-2.5 px-3 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-1.5 ${
+                    isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white'
                   }`}
                 >
                   <DynamicIcon name="Download" size={14} />
@@ -233,10 +233,10 @@ export default function SettingsModal({
                 </button>
 
                 <label
-                  className={`py-2.5 px-3 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 cursor-pointer border ${
+                  className={`py-2.5 px-3 rounded-xl text-[13px] font-medium flex items-center justify-center gap-1.5 cursor-pointer border ${
                     isDark
-                      ? 'border-zinc-700 text-zinc-300'
-                      : 'border-zinc-200 text-zinc-700'
+                      ? 'border-white/15 text-white/80'
+                      : 'border-black/10 text-black/70'
                   }`}
                 >
                   <DynamicIcon name="Upload" size={14} />
@@ -284,10 +284,10 @@ export default function SettingsModal({
               <button
                 type="button"
                 onClick={handleExportCSV}
-                className={`w-full py-2.5 rounded-xl text-[12px] font-medium flex items-center justify-center gap-1.5 border ${
+                className={`w-full py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-1.5 border ${
                   isDark
-                    ? 'border-zinc-700 text-zinc-300'
-                    : 'border-zinc-200 text-zinc-700'
+                    ? 'border-white/15 text-white/80'
+                    : 'border-black/10 text-black/70'
                 }`}
               >
                 <DynamicIcon name="FileSpreadsheet" size={14} />
@@ -295,7 +295,7 @@ export default function SettingsModal({
               </button>
 
               {lastBackupDate && (
-                <p className={`text-[11px] text-center ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                <p className={`text-[11px] text-center ${isDark ? 'text-white/30' : 'text-black/30'}`}>
                   Last backup {new Date(lastBackupDate).toLocaleDateString()}
                 </p>
               )}
@@ -303,16 +303,16 @@ export default function SettingsModal({
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-rose-500">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-rose-500">
               Danger zone
             </h3>
             {!showConfirmReset ? (
               <button
                 type="button"
                 onClick={() => setShowConfirmReset(true)}
-                className={`w-full py-3 rounded-2xl text-[12px] font-medium border ${
+                className={`w-full py-3 rounded-2xl text-[13px] font-medium border ${
                   isDark
-                    ? 'border-rose-900/50 text-rose-400'
+                    ? 'border-rose-500/30 text-rose-400'
                     : 'border-rose-200 text-rose-600'
                 }`}
               >
@@ -321,7 +321,7 @@ export default function SettingsModal({
             ) : (
               <div
                 className={`p-4 rounded-2xl border space-y-3 ${
-                  isDark ? 'border-rose-900 bg-rose-950/30' : 'border-rose-200 bg-rose-50'
+                  isDark ? 'border-rose-500/30 bg-rose-500/10' : 'border-rose-200 bg-rose-50'
                 }`}
               >
                 <p className={`text-[13px] ${isDark ? 'text-rose-200' : 'text-rose-800'}`}>
@@ -331,8 +331,8 @@ export default function SettingsModal({
                   <button
                     type="button"
                     onClick={() => setShowConfirmReset(false)}
-                    className={`flex-1 py-2.5 rounded-xl text-[12px] font-medium border ${
-                      isDark ? 'border-zinc-700' : 'border-zinc-200'
+                    className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium border ${
+                      isDark ? 'border-white/15' : 'border-black/10'
                     }`}
                   >
                     Cancel
@@ -340,7 +340,7 @@ export default function SettingsModal({
                   <button
                     type="button"
                     onClick={handleResetConfirm}
-                    className="flex-1 py-2.5 rounded-xl text-[12px] font-medium bg-rose-600 text-white"
+                    className="flex-1 py-2.5 rounded-xl text-[13px] font-semibold bg-rose-600 text-white"
                   >
                     Wipe everything
                   </button>
