@@ -21,10 +21,8 @@ export default function OverviewCharts({
   const isDark = themeMode === 'dark';
   const [timeframe, setTimeframe] = useState<TimeframeType>('month');
 
-  const muted = isDark ? 'text-zinc-500' : 'text-zinc-400';
-  const card = isDark
-    ? 'bg-zinc-950 border-zinc-800/80'
-    : 'bg-white border-zinc-200/80';
+  const muted = isDark ? 'text-white/40' : 'text-black/35';
+  const card = isDark ? 'glass-dark' : 'glass';
 
   const getPHPValue = (amount: number, currency?: 'PHP' | 'USD') =>
     (currency || 'PHP') === 'USD' ? amount * USD_RATE : amount;
@@ -114,10 +112,8 @@ export default function OverviewCharts({
           value={timeframe}
           onChange={(e) => setTimeframe(e.target.value as TimeframeType)}
           className={
-            'appearance-none px-3 py-2 rounded-full text-[12px] font-medium border outline-none ' +
-            (isDark
-              ? 'bg-zinc-900 border-zinc-800 text-zinc-100'
-              : 'bg-white border-zinc-200 text-zinc-800')
+            'appearance-none px-3 py-2 rounded-full text-[12px] font-medium outline-none ' +
+            (isDark ? 'glass-dark text-white' : 'glass text-[#1c1c1e]')
           }
         >
           <option value="day">Day</option>
@@ -142,10 +138,10 @@ export default function OverviewCharts({
           {
             label: 'Net',
             value: netSavingsPHP,
-            tone: isDark ? 'text-zinc-50' : 'text-zinc-900',
+            tone: isDark ? 'text-white' : 'text-[#1c1c1e]',
           },
         ].map((item) => (
-          <div key={item.label} className={'rounded-2xl border p-3 ' + card}>
+          <div key={item.label} className={'rounded-[200px] p-3 ' + card}>
             <p className={'text-[10px] font-medium uppercase tracking-[0.1em] ' + muted}>
               {item.label}
             </p>
@@ -156,7 +152,7 @@ export default function OverviewCharts({
         ))}
       </div>
 
-      <div className={'rounded-2xl border p-4 ' + card}>
+      <div className={'rounded-[22px] p-4 ' + card}>
         <p className={'text-[11px] font-medium uppercase tracking-[0.1em] mb-3 ' + muted}>
           Spending
         </p>
@@ -185,8 +181,8 @@ export default function OverviewCharts({
                   <Tooltip
                     formatter={(value: number) => formatPHP(value)}
                     contentStyle={{
-                      background: isDark ? '#18181b' : '#fff',
-                      border: '1px solid ' + (isDark ? '#27272a' : '#e4e4e7'),
+                      background: isDark ? '#1c1c1e' : '#fff',
+                      border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'),
                       borderRadius: 12,
                       fontSize: 12,
                     }}
@@ -215,7 +211,7 @@ export default function OverviewCharts({
         )}
       </div>
 
-      <div className={'rounded-2xl border p-4 ' + card}>
+      <div className={'rounded-[22px] p-4 ' + card}>
         <p className={'text-[11px] font-medium uppercase tracking-[0.1em] mb-3 ' + muted}>
           Wallets
         </p>
@@ -234,12 +230,12 @@ export default function OverviewCharts({
                 <div
                   className={
                     'h-1.5 rounded-full overflow-hidden ' +
-                    (isDark ? 'bg-zinc-900' : 'bg-zinc-100')
+                    (isDark ? 'bg-white/8' : 'bg-black/[0.04]')
                   }
                 >
                   <div
                     className={
-                      'h-full rounded-full ' + (isDark ? 'bg-zinc-400' : 'bg-zinc-800')
+                      'h-full rounded-full ' + (isDark ? 'bg-white/50' : 'bg-[#1c1c1e]')
                     }
                     style={{ width: Math.max(2, Math.min(100, w.percentage)) + '%' }}
                   />
