@@ -62,27 +62,27 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
     onClose();
   };
 
-  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ${
-    isDark ? 'bg-zinc-950 border-zinc-800 text-white' : 'bg-zinc-50 border-zinc-200 text-zinc-900'
+  const field = `w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-black/20 ${
+    isDark ? 'bg-white/8 border-white/10 text-white' : 'bg-black/[0.03] border-black/8 text-[#1c1c1e]'
   }`;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="absolute inset-0" onClick={onClose} />
       <div
         className={`relative w-full sm:max-w-md max-h-[90vh] rounded-t-[28px] sm:rounded-[28px] shadow-2xl flex flex-col overflow-hidden border ${
-          isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-zinc-200'
+          isDark ? 'glass-sheet-dark text-white' : 'glass-sheet text-[#1c1c1e]'
         }`}
       >
         <div className={`px-5 py-4 flex items-center justify-between border-b shrink-0 ${
-          isDark ? 'border-zinc-800' : 'border-zinc-100'
+          isDark ? 'border-white/10' : 'border-black/6'
         }`}>
-          <h3 className="text-[14px] font-semibold tracking-tight">New debt</h3>
+          <h3 className="text-[15px] font-semibold tracking-tight">New debt</h3>
           <button
             type="button"
             onClick={onClose}
             className={`rounded-full p-1.5 ${
-              isDark ? 'text-zinc-400 hover:bg-zinc-900' : 'text-zinc-400 hover:bg-zinc-100'
+              isDark ? 'text-white/45 hover:bg-white/10' : 'text-black/35 hover:bg-black/5'
             }`}
           >
             <DynamicIcon name="X" size={16} />
@@ -90,18 +90,18 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
         </div>
 
         <form onSubmit={handleSubmit} className="overflow-y-auto overscroll-contain px-5 py-5 flex-1 space-y-4">
-          <div className={`flex p-0.5 rounded-xl ${isDark ? 'bg-zinc-900' : 'bg-zinc-100'}`}>
+          <div className={`flex p-0.5 rounded-xl ${isDark ? 'bg-white/8' : 'bg-black/[0.04]'}`}>
             <button
               type="button"
               onClick={() => setType('lent')}
-              className={`flex-1 py-2 rounded-[10px] text-[12px] font-medium transition-all ${
+              className={`flex-1 py-2 rounded-[10px] text-[13px] font-medium transition-all ${
                 type === 'lent'
                   ? isDark
-                    ? 'bg-zinc-800 text-zinc-50'
-                    : 'bg-white text-zinc-900 shadow-sm'
+                    ? 'bg-white/15 text-white'
+                    : 'bg-white text-[#1c1c1e] shadow-sm'
                   : isDark
-                    ? 'text-zinc-500'
-                    : 'text-zinc-500'
+                    ? 'text-white/40'
+                    : 'text-black/40'
               }`}
             >
               Lent
@@ -109,14 +109,14 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
             <button
               type="button"
               onClick={() => setType('borrowed')}
-              className={`flex-1 py-2 rounded-[10px] text-[12px] font-medium transition-all ${
+              className={`flex-1 py-2 rounded-[10px] text-[13px] font-medium transition-all ${
                 type === 'borrowed'
                   ? isDark
-                    ? 'bg-zinc-800 text-zinc-50'
-                    : 'bg-white text-zinc-900 shadow-sm'
+                    ? 'bg-white/15 text-white'
+                    : 'bg-white text-[#1c1c1e] shadow-sm'
                   : isDark
-                    ? 'text-zinc-500'
-                    : 'text-zinc-500'
+                    ? 'text-white/40'
+                    : 'text-black/40'
               }`}
             >
               Borrowed
@@ -124,7 +124,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               {type === 'lent' ? 'Lent to' : 'Borrowed from'}
             </label>
             <input
@@ -139,7 +139,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
 
           <div className="grid grid-cols-3 gap-2">
             <div className="col-span-2">
-              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 Amount
               </label>
               <input
@@ -153,7 +153,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
               />
             </div>
             <div>
-              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 Currency
               </label>
               <select
@@ -168,7 +168,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Note
             </label>
             <input
@@ -181,7 +181,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+            <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
               Wallet
             </label>
             <select
@@ -199,7 +199,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
           </div>
 
           {walletId && (
-            <label className="flex items-center gap-2 text-[12px] text-zinc-500">
+            <label className={`flex items-center gap-2 text-[12px] ${isDark ? 'text-white/40' : 'text-black/40'}`}>
               <input
                 type="checkbox"
                 checked={shouldAffectWallet}
@@ -212,7 +212,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 Date
               </label>
               <input
@@ -224,7 +224,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
               />
             </div>
             <div>
-              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-[0.1em] mb-1.5">
+              <label className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-1.5 ${isDark ? 'text-white/40' : 'text-black/35'}`}>
                 Due
               </label>
               <input
@@ -241,7 +241,7 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
               type="button"
               onClick={onClose}
               className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium border ${
-                isDark ? 'border-zinc-700 text-zinc-300' : 'border-zinc-200 text-zinc-600'
+                isDark ? 'border-white/15 text-white/80' : 'border-black/10 text-black/60'
               }`}
             >
               Cancel
@@ -249,8 +249,8 @@ export default function AddCreditModal({ isOpen, onClose, wallets, onAdd, themeM
             <button
               type="submit"
               disabled={!person.trim() || !amount}
-              className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium disabled:opacity-50 ${
-                isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+              className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold disabled:opacity-50 ${
+                isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white'
               }`}
             >
               Save
