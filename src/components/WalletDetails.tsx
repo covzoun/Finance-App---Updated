@@ -105,24 +105,24 @@ export default function WalletDetails({
     ? BANK_PRESETS.find((p) => p.id === bankId)?.color
     : undefined;
 
-  const muted = isDark ? 'text-zinc-500' : 'text-zinc-400';
+  const muted = isDark ? 'text-white/40' : 'text-black/35';
   const field =
-    'w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-zinc-400 ' +
+    'w-full rounded-xl border px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-black/20 ' +
     (isDark
-      ? 'bg-zinc-950 border-zinc-800 text-white'
-      : 'bg-zinc-50 border-zinc-200 text-zinc-900');
+      ? 'bg-white/8 border-white/10 text-white'
+      : 'bg-black/[0.03] border-black/8 text-[#1c1c1e]');
 
   return (
     <div
       className={
         'fixed inset-0 z-40 flex flex-col ' +
-        (isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900')
+        (isDark ? 'app-bg-dark text-white' : 'app-bg text-[#1c1c1e]')
       }
     >
       <div
         className={
           'flex items-center justify-between px-4 h-14 border-b shrink-0 ' +
-          (isDark ? 'border-zinc-800' : 'border-zinc-200')
+          (isDark ? 'border-white/10' : 'border-black/8')
         }
       >
         <button
@@ -130,7 +130,7 @@ export default function WalletDetails({
           onClick={onBack}
           className={
             'flex items-center gap-1 text-[13px] font-medium ' +
-            (isDark ? 'text-zinc-400' : 'text-zinc-500')
+            (isDark ? 'text-white/45' : 'text-black/40')
           }
         >
           <DynamicIcon name="ChevronLeft" size={18} />
@@ -141,8 +141,8 @@ export default function WalletDetails({
             type="button"
             onClick={() => setIsEditing((v) => !v)}
             className={
-              'p-2 rounded-lg ' +
-              (isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200 text-zinc-500')
+              'p-2 rounded-full ' +
+              (isDark ? 'hover:bg-white/10 text-white/45' : 'hover:bg-black/5 text-black/40')
             }
           >
             <DynamicIcon name={isEditing ? 'X' : 'Edit3'} size={16} />
@@ -152,7 +152,7 @@ export default function WalletDetails({
             onClick={() => {
               if (confirm('Delete ' + wallet.name + '?')) onDeleteWallet(wallet.id);
             }}
-            className={'p-2 rounded-lg ' + (isDark ? 'text-rose-400' : 'text-rose-500')}
+            className={'p-2 rounded-full ' + (isDark ? 'text-rose-400' : 'text-rose-500')}
           >
             <DynamicIcon name="Trash2" size={16} />
           </button>
@@ -213,11 +213,11 @@ export default function WalletDetails({
                       'py-2 rounded-xl text-[11px] font-medium capitalize border ' +
                       (editType === t
                         ? isDark
-                          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
-                          : 'bg-zinc-900 text-white border-zinc-900'
+                          ? 'bg-white text-black border-white'
+                          : 'bg-[#1c1c1e] text-white border-[#1c1c1e]'
                         : isDark
-                          ? 'border-zinc-800 text-zinc-400'
-                          : 'border-zinc-200 text-zinc-500')
+                          ? 'border-white/10 text-white/40'
+                          : 'border-black/8 text-black/40')
                     }
                   >
                     {t}
@@ -240,11 +240,11 @@ export default function WalletDetails({
                       'py-2 rounded-xl text-[12px] font-medium border ' +
                       (editCurrency === c
                         ? isDark
-                          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
-                          : 'bg-zinc-900 text-white border-zinc-900'
+                          ? 'bg-white text-black border-white'
+                          : 'bg-[#1c1c1e] text-white border-[#1c1c1e]'
                         : isDark
-                          ? 'border-zinc-800 text-zinc-400'
-                          : 'border-zinc-200 text-zinc-500')
+                          ? 'border-white/10 text-white/40'
+                          : 'border-black/8 text-black/40')
                     }
                   >
                     {c}
@@ -265,7 +265,7 @@ export default function WalletDetails({
                     onClick={() => setEditColor(color.value)}
                     className={
                       'h-7 w-7 rounded-full ' +
-                      (editColor === color.value ? 'ring-2 ring-offset-2 ring-zinc-400' : '')
+                      (editColor === color.value ? 'ring-2 ring-offset-2 ring-black/20' : '')
                     }
                     style={{ backgroundColor: color.hex }}
                   />
@@ -287,11 +287,11 @@ export default function WalletDetails({
                       'h-10 rounded-xl flex items-center justify-center border ' +
                       (editIcon === iconName
                         ? isDark
-                          ? 'bg-zinc-100 text-zinc-900 border-zinc-100'
-                          : 'bg-zinc-900 text-white border-zinc-900'
+                          ? 'bg-white text-black border-white'
+                          : 'bg-[#1c1c1e] text-white border-[#1c1c1e]'
                         : isDark
-                          ? 'border-zinc-800 text-zinc-400'
-                          : 'border-zinc-200 text-zinc-500')
+                          ? 'border-white/10 text-white/40'
+                          : 'border-black/8 text-black/40')
                     }
                   >
                     <DynamicIcon name={iconName} size={16} />
@@ -304,8 +304,8 @@ export default function WalletDetails({
               type="button"
               onClick={handleSaveEdit}
               className={
-                'w-full py-2.5 rounded-xl text-[13px] font-medium ' +
-                (isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white')
+                'w-full py-2.5 rounded-xl text-[13px] font-semibold ' +
+                (isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white')
               }
             >
               Save changes
@@ -317,7 +317,7 @@ export default function WalletDetails({
               <div
                 className={
                   'mx-auto h-14 w-14 rounded-2xl overflow-hidden flex items-center justify-center mb-4 ' +
-                  (isDark ? 'bg-zinc-900' : 'bg-zinc-100')
+                  (isDark ? 'bg-white/8' : 'bg-black/[0.04]')
                 }
                 style={bankColor ? { backgroundColor: bankColor } : undefined}
               >
@@ -355,8 +355,8 @@ export default function WalletDetails({
                 type="button"
                 onClick={() => onAddTransactionClick(wallet.id)}
                 className={
-                  'mt-6 px-5 py-2.5 rounded-full text-[13px] font-medium ' +
-                  (isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white')
+                  'mt-6 px-5 py-2.5 rounded-full text-[14px] font-semibold ' +
+                  (isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white')
                 }
               >
                 Add transaction
@@ -368,10 +368,10 @@ export default function WalletDetails({
             </p>
             <div
               className={
-                'rounded-2xl border overflow-hidden divide-y ' +
+                'rounded-[22px] overflow-hidden divide-y ' +
                 (isDark
-                  ? 'bg-zinc-950 border-zinc-800/80 divide-zinc-800/80'
-                  : 'bg-white border-zinc-200/80 divide-zinc-100')
+                  ? 'glass-dark divide-white/[0.06]'
+                  : 'glass divide-black/[0.05]')
               }
             >
               {transactions.length === 0 ? (
