@@ -392,21 +392,21 @@ export default function App() {
       meta.setAttribute('name', 'theme-color');
       document.head.appendChild(meta);
     }
-    meta.setAttribute('content', isDark ? '#09090b' : '#fafafa');
+    meta.setAttribute('content', isDark ? '#000000' : '#f2f2f7');
   }, [isDark]);
 
-  const muted = isDark ? 'text-zinc-500' : 'text-zinc-400';
-  const hairline = isDark ? 'border-zinc-800' : 'border-zinc-200';
+  const muted = isDark ? 'text-white/40' : 'text-black/35';
+  const hairline = isDark ? 'border-white/10' : 'border-black/8';
 
   return (
     <div className={isDark ? 'dark' : ''}>
-      <div className={`min-h-screen ${isDark ? 'bg-zinc-950 text-zinc-50' : 'bg-zinc-50 text-zinc-900'}`}>
+      <div className={`min-h-screen ${isDark ? 'app-bg-dark text-white' : 'app-bg text-[#1c1c1e]'}`}>
         <section className="max-w-md mx-auto px-6 pt-14 pb-8 relative">
           <button
             type="button"
             onClick={() => setShowAnalyticsPanel(true)}
             className={`absolute top-12 right-4 p-2.5 rounded-full transition-colors z-10 ${
-              isDark ? 'hover:bg-zinc-900 text-zinc-400' : 'hover:bg-zinc-200/70 text-zinc-500'
+              isDark ? 'glass-dark text-white/55 hover:text-white' : 'glass text-black/40 hover:text-black/70'
             }`}
             aria-label="Insights"
           >
@@ -443,13 +443,13 @@ export default function App() {
           {activeTab === 'wallets' && (
             <div className="space-y-2">
               {wallets.length === 0 ? (
-                <div className={`text-center py-16 rounded-3xl border border-dashed ${hairline} ${muted}`}>
-                  <p className="text-[14px] mb-5">Nothing here yet</p>
+                <div className={`text-center py-16 rounded-[28px] ${isDark ? 'glass-dark' : 'glass'} ${muted}`}>
+                  <p className="text-[15px] mb-5">Nothing here yet</p>
                   <button
                     type="button"
                     onClick={() => setIsAddWalletOpen(true)}
-                    className={`px-5 py-2.5 rounded-full text-[13px] font-medium ${
-                      isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+                    className={`px-5 py-2.5 rounded-full text-[14px] font-semibold ${
+                      isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white'
                     }`}
                   >
                     Add wallet
@@ -475,17 +475,17 @@ export default function App() {
                 value={txSearchQuery}
                 onChange={(e) => setTxSearchQuery(e.target.value)}
                 placeholder="Search"
-                className={`w-full px-4 py-3 rounded-2xl text-[14px] border outline-none ${
+                className={`w-full px-4 py-3.5 rounded-[18px] text-[15px] outline-none ${
                   isDark
-                    ? 'bg-zinc-900 border-zinc-800 placeholder:text-zinc-600 focus:border-zinc-600'
-                    : 'bg-white border-zinc-200 placeholder:text-zinc-400 focus:border-zinc-300'
+                    ? 'glass-dark placeholder:text-white/30'
+                    : 'glass placeholder:text-black/30'
                 }`}
               />
               <div
-                className={`rounded-2xl border overflow-hidden divide-y ${
+                className={`rounded-[22px] overflow-hidden divide-y ${
                   isDark
-                    ? 'bg-zinc-950 border-zinc-800/80 divide-zinc-800/80'
-                    : 'bg-white border-zinc-200/80 divide-zinc-100'
+                    ? 'glass-dark divide-white/[0.06]'
+                    : 'glass divide-black/[0.05]'
                 }`}
               >
                 {displayedTransactions.slice(0, visibleTxCount).map((t) => (
@@ -520,10 +520,8 @@ export default function App() {
         <div className="fixed bottom-0 inset-x-0 z-30">
           <div className="max-w-md mx-auto px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <div
-              className={`flex items-center rounded-full border px-2 py-1.5 backdrop-blur-xl ${
-                isDark
-                  ? 'bg-zinc-900/90 border-zinc-800'
-                  : 'bg-white/90 border-zinc-200'
+              className={`flex items-center rounded-full px-2 py-1.5 ${
+                isDark ? 'glass-dock-dark' : 'glass-dock'
               }`}
             >
               {(
@@ -538,11 +536,11 @@ export default function App() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-medium transition-colors ${
+                    className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${
                       active
                         ? isDark
-                          ? 'text-zinc-50'
-                          : 'text-zinc-900'
+                          ? 'text-white'
+                          : 'text-[#1c1c1e]'
                         : muted
                     }`}
                   >
@@ -559,8 +557,8 @@ export default function App() {
                   else if (activeTab === 'activity') handleOpenTxModal();
                   else setIsAddDebtOpen(true);
                 }}
-                className={`mx-1 h-11 w-11 shrink-0 rounded-full flex items-center justify-center active:scale-95 transition-transform ${
-                  isDark ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-900 text-white'
+                className={`mx-1 h-11 w-11 shrink-0 rounded-full flex items-center justify-center active:scale-95 transition-transform shadow-lg ${
+                  isDark ? 'bg-white text-black' : 'bg-[#1c1c1e] text-white'
                 }`}
                 aria-label="Add"
               >
@@ -570,11 +568,11 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveTab('debts')}
-                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-medium transition-colors ${
+                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${
                   activeTab === 'debts'
                     ? isDark
-                      ? 'text-zinc-50'
-                      : 'text-zinc-900'
+                      ? 'text-white'
+                      : 'text-[#1c1c1e]'
                     : muted
                 }`}
               >
@@ -585,7 +583,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setIsSettingsOpen(true)}
-                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-medium transition-colors ${muted}`}
+                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${muted}`}
               >
                 <DynamicIcon name="Settings" size={20} />
                 Settings
@@ -626,10 +624,10 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.2 }}
-              className={`fixed inset-0 z-50 flex flex-col ${isDark ? 'bg-zinc-950' : 'bg-white'}`}
+              className={`fixed inset-0 z-50 flex flex-col ${isDark ? 'app-bg-dark' : 'app-bg'}`}
             >
               <div className={`flex items-center gap-2 px-4 h-14 border-b ${hairline}`}>
-                <button type="button" onClick={() => setShowAnalyticsPanel(false)} className={`p-2 rounded-lg ${isDark ? 'hover:bg-zinc-900' : 'hover:bg-zinc-100'}`}>
+                <button type="button" onClick={() => setShowAnalyticsPanel(false)} className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}>
                   <DynamicIcon name="X" size={18} />
                 </button>
                 <h2 className="text-[15px] font-semibold tracking-tight">Insights</h2>
