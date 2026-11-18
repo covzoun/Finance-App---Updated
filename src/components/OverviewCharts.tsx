@@ -141,7 +141,7 @@ export default function OverviewCharts({
             tone: isDark ? 'text-white' : 'text-[#1c1c1e]',
           },
         ].map((item) => (
-          <div key={item.label} className={'rounded-[200px] p-3 ' + card}>
+          <div key={item.label} className={'rounded-[20px] p-3 ' + card}>
             <p className={'text-[10px] font-medium uppercase tracking-[0.1em] ' + muted}>
               {item.label}
             </p>
