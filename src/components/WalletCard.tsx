@@ -40,15 +40,15 @@ export default function WalletCard({
   return (
     <motion.button
       type="button"
-      whileTap={{ scale: 0.985 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`w-full text-left rounded-2xl px-4 py-3.5 flex items-center gap-3.5 ${
+      className={`w-full text-left rounded-[20px] px-4 py-4 flex items-center gap-3.5 transition-colors ${
         isDark ? 'card-dark' : 'card'
       }`}
     >
       <div
-        className={`h-11 w-11 shrink-0 rounded-xl overflow-hidden flex items-center justify-center ${
-          isDark ? 'bg-white/10' : 'bg-black/[0.04]'
+        className={`h-12 w-12 shrink-0 rounded-2xl overflow-hidden flex items-center justify-center ${
+          isDark ? 'bg-white/[0.08]' : 'bg-zinc-100'
         }`}
         style={bankColor ? { backgroundColor: bankColor } : undefined}
       >
@@ -60,29 +60,44 @@ export default function WalletCard({
             referrerPolicy="no-referrer"
           />
         ) : bankId ? (
-          <BankLogo bank={bankId} size={22} />
+          <BankLogo bank={bankId} size={24} />
         ) : (
           <DynamicIcon
             name={wallet.icon || 'Wallet'}
-            size={18}
-            className={isDark ? 'text-white/55' : 'text-black/40'}
+            size={20}
+            className={isDark ? 'text-white/50' : 'text-zinc-500'}
           />
         )}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className={`text-[15px] font-semibold tracking-[-0.01em] truncate ${isDark ? 'text-white' : 'text-black'}`}>
+        <p
+          className={`text-[15px] font-semibold tracking-[-0.02em] truncate ${
+            isDark ? 'text-white' : 'text-zinc-950'
+          }`}
+        >
           {wallet.name}
         </p>
-        <p className={`text-[12px] mt-0.5 capitalize ${isDark ? 'muted-dark' : 'muted'}`}>
+        <p className={`text-[12px] mt-0.5 capitalize tracking-[-0.01em] ${isDark ? 'muted-dark' : 'muted'}`}>
           {wallet.type}
           {wallet.currency ? ` · ${wallet.currency}` : ''}
         </p>
       </div>
 
-      <p className={`tabular text-[15px] font-semibold tracking-tight shrink-0 ${isDark ? 'text-white' : 'text-black'}`}>
-        {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
-      </p>
+      <div className="flex items-center gap-1.5 shrink-0">
+        <p
+          className={`tabular text-[15px] font-semibold tracking-[-0.02em] ${
+            isDark ? 'text-white' : 'text-zinc-950'
+          }`}
+        >
+          {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
+        </p>
+        <DynamicIcon
+          name="ChevronRight"
+          size={16}
+          className={isDark ? 'text-white/25' : 'text-zinc-300'}
+        />
+      </div>
     </motion.button>
   );
 }
