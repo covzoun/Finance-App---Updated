@@ -137,6 +137,16 @@
   .line-dark {
     border-color: rgba(255, 255, 255, 0.08);
   }
+
+  /* Legacy aliases so older modal class names still resolve to solid surfaces */
+  .glass { background: #ffffff; border: 1px solid rgba(10, 10, 10, 0.08); box-shadow: 0 1px 2px rgba(10, 10, 10, 0.03); }
+  .glass-dark { background: #171717; border: 1px solid rgba(255, 255, 255, 0.08); }
+  .glass-sheet { background: #ffffff; border: 1px solid rgba(10, 10, 10, 0.08); box-shadow: 0 -8px 32px rgba(10, 10, 10, 0.1); }
+  .glass-sheet-dark { background: #171717; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45); }
+  .glass-dock { background: #ffffff; border: 1px solid rgba(10, 10, 10, 0.08); box-shadow: 0 8px 24px rgba(10, 10, 10, 0.08); }
+  .glass-dock-dark { background: #171717; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
+  .app-bg { background: #f5f5f7; color: #0a0a0a; }
+  .app-bg-dark { background: #0a0a0a; color: #fafafa; }
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator,
