@@ -55,16 +55,12 @@ export default function TransactionItem({
 
   const amountColor =
     transaction.type === 'income'
-      ? isDark
-        ? 'text-emerald-400'
-        : 'text-emerald-600'
+      ? 'text-emerald-600'
       : transaction.type === 'expense'
-        ? isDark
-          ? 'text-rose-400'
-          : 'text-rose-500'
+        ? 'text-red-600'
         : isDark
-          ? 'text-white/80'
-          : 'text-[#1c1c1e]';
+          ? 'text-white'
+          : 'text-black';
 
   const prefix =
     transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '−' : '';
@@ -78,13 +74,13 @@ export default function TransactionItem({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3.5 py-3 text-left transition-colors ${
-        isDark ? 'hover:bg-white/[0.04]' : 'hover:bg-black/[0.03]'
+      className={`w-full flex items-center gap-3 px-4 py-3.5 text-left min-h-[56px] ${
+        isDark ? 'active:bg-white/[0.05]' : 'active:bg-black/[0.03]'
       }`}
     >
       <div
-        className={`h-10 w-10 shrink-0 rounded-2xl flex items-center justify-center ${
-          isDark ? 'bg-white/[0.06] text-white/45' : 'bg-black/[0.04] text-black/35'
+        className={`h-10 w-10 shrink-0 rounded-xl flex items-center justify-center ${
+          isDark ? 'bg-white/10 text-white/50' : 'bg-black/[0.04] text-black/40'
         }`}
       >
         <DynamicIcon name={categoryIcon(transaction.category)} size={16} />
@@ -92,28 +88,24 @@ export default function TransactionItem({
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
-          <p
-            className={`text-[14px] font-medium tracking-[-0.01em] truncate ${
-              isDark ? 'text-white' : 'text-[#1c1c1e]'
-            }`}
-          >
+          <p className={`text-[15px] font-medium tracking-[-0.01em] truncate ${isDark ? 'text-white' : 'text-black'}`}>
             {transaction.description || transaction.category || 'Transaction'}
           </p>
           {transaction.isRecurring && (
             <DynamicIcon
               name="RefreshCw"
               size={11}
-              className={isDark ? 'text-white/30' : 'text-black/25'}
+              className={isDark ? 'text-white/30' : 'text-black/30'}
             />
           )}
         </div>
-        <p className={`text-[12px] mt-0.5 truncate ${isDark ? 'text-white/35' : 'text-black/35'}`}>
+        <p className={`text-[12px] mt-0.5 truncate ${isDark ? 'muted-dark' : 'muted'}`}>
           {formatDate(transaction.date)}
           {subtitle ? ` · ${subtitle}` : ''}
         </p>
       </div>
 
-      <p className={`tabular text-[14px] font-semibold shrink-0 ${amountColor}`}>
+      <p className={`tabular text-[15px] font-semibold shrink-0 ${amountColor}`}>
         {prefix}
         {formatCurrency(transaction.amount, wallet?.currency || 'PHP')}
       </p>
