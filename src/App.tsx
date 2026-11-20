@@ -448,7 +448,8 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setIsAddWalletOpen(true)}
-                    className={`px-5 py-2.5 rounded-full text-[14px] font-semibold ${\n                      isDark ? 'bg-white text-black' : 'bg-black text-white'
+                    className={`px-5 py-2.5 rounded-full text-[14px] font-semibold ${
+                      isDark ? 'bg-white text-black' : 'bg-black text-white'
                     }`}
                   >
                     Add wallet
@@ -474,13 +475,15 @@ export default function App() {
                 value={txSearchQuery}
                 onChange={(e) => setTxSearchQuery(e.target.value)}
                 placeholder="Search"
-                className={`w-full px-4 py-3.5 rounded-xl text-[15px] outline-none ${\n                  isDark
+                className={`w-full px-4 py-3.5 rounded-xl text-[15px] outline-none ${
+                  isDark
                     ? 'field-dark placeholder:text-white/30'
                     : 'field placeholder:text-black/30'
                 }`}
               />
               <div
-                className={`rounded-2xl overflow-hidden divide-y ${\n                  isDark
+                className={`rounded-2xl overflow-hidden divide-y ${
+                  isDark
                     ? 'card-dark divide-white/[0.06]'
                     : 'card divide-black/[0.05]'
                 }`}
@@ -517,7 +520,8 @@ export default function App() {
         <div className="fixed bottom-0 inset-x-0 z-30">
           <div className="max-w-md mx-auto px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <div
-              className={`flex items-center rounded-full px-2 py-1.5 ${\n                isDark ? 'dock-dark' : 'dock'
+              className={`flex items-center rounded-full px-2 py-1.5 ${
+                isDark ? 'dock-dark' : 'dock'
               }`}
             >
               {(
@@ -532,7 +536,8 @@ export default function App() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${\n                      active
+                    className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${
+                      active
                         ? isDark
                           ? 'text-white'
                           : 'text-black'
@@ -552,7 +557,8 @@ export default function App() {
                   else if (activeTab === 'activity') handleOpenTxModal();
                   else setIsAddDebtOpen(true);
                 }}
-                className={`mx-1 h-11 w-11 shrink-0 rounded-full flex items-center justify-center active:scale-95 transition-transform shadow-sm ${\n                  isDark ? 'bg-white text-black' : 'bg-black text-white'
+                className={`mx-1 h-11 w-11 shrink-0 rounded-full flex items-center justify-center active:scale-95 transition-transform shadow-sm ${
+                  isDark ? 'bg-white text-black' : 'bg-black text-white'
                 }`}
                 aria-label="Add"
               >
@@ -562,7 +568,8 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveTab('debts')}
-                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${\n                  activeTab === 'debts'
+                className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-full text-[10px] font-semibold transition-colors ${
+                  activeTab === 'debts'
                     ? isDark
                       ? 'text-white'
                       : 'text-black'
@@ -605,7 +612,13 @@ export default function App() {
           editingTransaction={editingTransaction}
           themeMode={themeMode}
         />
-        <AddCreditModal isOpen={isAddDebtOpen} onClose={() => setIsAddDebtOpen(false)} wallets={wallets} onAdd={handleAddDebt} themeMode={themeMode} />
+        <AddCreditModal
+          isOpen={isAddDebtOpen}
+          onClose={() => setIsAddDebtOpen(false)}
+          wallets={wallets}
+          onAdd={handleAddDebt}
+          themeMode={themeMode}
+        />
         <SettingsModal
           lastBackupDate={lastBackupDate}
           onBackupComplete={() => setLastBackupDate(new Date().toISOString())}
@@ -628,7 +641,11 @@ export default function App() {
               className={`fixed inset-0 z-50 flex flex-col ${isDark ? 'page-dark' : 'page'}`}
             >
               <div className={`flex items-center gap-2 px-4 h-14 border-b ${hairline}`}>
-                <button type="button" onClick={() => setShowAnalyticsPanel(false)} className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}>
+                <button
+                  type="button"
+                  onClick={() => setShowAnalyticsPanel(false)}
+                  className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}
+                >
                   <DynamicIcon name="X" size={18} />
                 </button>
                 <h2 className="text-[15px] font-semibold tracking-tight">Insights</h2>
