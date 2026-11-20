@@ -42,13 +42,13 @@ export default function WalletCard({
       type="button"
       whileTap={{ scale: 0.985 }}
       onClick={onClick}
-      className={`w-full text-left rounded-[22px] px-4 py-3.5 flex items-center gap-3.5 transition-colors ${
-        isDark ? 'glass-dark hover:bg-white/[0.08]' : 'glass hover:bg-white/70'
+      className={`w-full text-left rounded-2xl px-4 py-3.5 flex items-center gap-3.5 ${
+        isDark ? 'card-dark' : 'card'
       }`}
     >
       <div
-        className={`h-11 w-11 shrink-0 rounded-2xl overflow-hidden flex items-center justify-center ${
-          isDark ? 'bg-white/8' : 'bg-black/[0.04]'
+        className={`h-11 w-11 shrink-0 rounded-xl overflow-hidden flex items-center justify-center ${
+          isDark ? 'bg-white/10' : 'bg-black/[0.04]'
         }`}
         style={bankColor ? { backgroundColor: bankColor } : undefined}
       >
@@ -65,30 +65,22 @@ export default function WalletCard({
           <DynamicIcon
             name={wallet.icon || 'Wallet'}
             size={18}
-            className={isDark ? 'text-white/60' : 'text-black/40'}
+            className={isDark ? 'text-white/55' : 'text-black/40'}
           />
         )}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p
-          className={`text-[15px] font-semibold tracking-[-0.01em] truncate ${
-            isDark ? 'text-white' : 'text-[#1c1c1e]'
-          }`}
-        >
+        <p className={`text-[15px] font-semibold tracking-[-0.01em] truncate ${isDark ? 'text-white' : 'text-black'}`}>
           {wallet.name}
         </p>
-        <p className={`text-[12px] mt-0.5 capitalize ${isDark ? 'text-white/40' : 'text-black/35'}`}>
+        <p className={`text-[12px] mt-0.5 capitalize ${isDark ? 'muted-dark' : 'muted'}`}>
           {wallet.type}
           {wallet.currency ? ` · ${wallet.currency}` : ''}
         </p>
       </div>
 
-      <p
-        className={`tabular text-[15px] font-semibold tracking-tight shrink-0 ${
-          isDark ? 'text-white' : 'text-[#1c1c1e]'
-        }`}
-      >
+      <p className={`tabular text-[15px] font-semibold tracking-tight shrink-0 ${isDark ? 'text-white' : 'text-black'}`}>
         {formatCurrency(wallet.balance, wallet.currency || 'PHP')}
       </p>
     </motion.button>
